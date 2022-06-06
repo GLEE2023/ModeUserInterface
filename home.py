@@ -10,4 +10,12 @@ def index():
 def about():
 	sites = ['Temperature', 'Accelerometer', 'Thermopile', 'Magnetometer', 'Capacitor']
 	return render_template("about.html", sites=sites)
+ 
+@app.route("/accelerometer")
+def accelerometer():
+	return render_template("accelerometer.html")
+ 
 
+
+ 
+app.run(host='localhost', port=5000)
