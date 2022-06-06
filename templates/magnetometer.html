@@ -1,0 +1,12 @@
+{% extends 'index.html' %}
+{% block body %}
+<p>Enter inputs here.</p>
+<form action="/data" method = "POST">
+<p>BurstDataRate <input type = "text" name = "burstdatarate" /></p>
+<p>tuple threshold = (0,0,0) <input type = "text" name = "tuple_threshold" /></p>
+<p>single <input type = "text" name = "single" /></p>
+<p>burst <input type = "text" name = "burst" /></p>
+<p>WOC_Absolute<input type = "text" name = "WOC_Absolute" /></p>
+<p>WOC_Differential <input type = "text" name = "WOC_Differential" /></p>
+</form>
+{% endblock %}

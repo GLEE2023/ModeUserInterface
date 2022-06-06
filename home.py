@@ -15,7 +15,9 @@ def about():
 def accelerometer():
 	return render_template("accelerometer.html")
  
+@app.route("/magnetometer")
+def magnetometer():
+	return render_template("magnetometer.html")
 
 
- 
 app.run(host='localhost', port=5000)
