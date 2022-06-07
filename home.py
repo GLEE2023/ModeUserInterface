@@ -19,5 +19,4 @@ def accelerometer():
 def magnetometer():
 	return render_template("magnetometer.html")
 
-
 app.run(host='localhost', port=5000)
