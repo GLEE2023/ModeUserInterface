@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+{% block body %}
+
+  <div class="container">
+    <h1>TMP117 temperature sensor</h1>
+    <p>Features:</p>
+    <ul>
+      <li>
+        Operating temperature range: -55°C to 150°C
+      </li>
+      <li>
+        Supply range: 1.7v - 5.5v (-55°C to 70°C) or 1.8v - 5.5v (-55°C to 180°C)
+      </li>
+      <li>
+        Programmable modes
+      </li>
+    </ul>
+    <label for="modes">Select a mode for the TMP117 sensor:</label>
+    <select class="" name="modes">
+      <option value="CC">Continuous Conversion</option>
+      <option value="SD">Shutdown</option>
+      <option value="oneshot">One Shot</option>
+      <option value="alert">Therm/Alert mode</option>
+    </select>
+    <br></br>
+    <label for="average">Choose the averaging rate of the TMP117</label>
+    <form name="average">
+      <input type="radio" id="none" name="conv" value="none">
+      <label for="none">No averaging</label><br>
+      <input type="radio" id="8" name="conv" value="8">
+      <label for="8">8</label><br>
+      <input type="radio" id="32" name="conv" value="32">
+      <label for="32">32</label>
+      <input type="radio" id="64" name="conv" value="64">
+      <label for="64">64</label>
+    </form>
+    <br></br>
+    
+  </div>
+
+{% endblock %}

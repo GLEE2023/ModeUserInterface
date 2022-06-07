@@ -4,14 +4,16 @@
 <head>
     <title>FlaskTest</title>
     <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+
 </head>
  
 <body>
   <h2>Welcome To GLEE2023</h2>
-  <h4>Mode Interface</h4>
   <a href="{{ url_for('about') }}">Sensor Info</a>
   <a href="{{ url_for('accelerometer') }}">Accelerometer Inputs</a>
   <a href="{{ url_for('magnetometer') }}">Magnetometer Inputs</a>
+  <a href="{{ url_for('TMP117') }}">Temperature Inputs</a>
 
   {% block body %}
   {% endblock %}
