@@ -11,3 +11,6 @@ def about():
 	sites = ['Temperature', 'Accelerometer', 'Thermopile', 'Magnetometer', 'Capacitor']
 	return render_template("about.html", sites=sites)
 
+@app.route("/tmp117")
+def tmp117():
+	return render_template("TMP117.html")
