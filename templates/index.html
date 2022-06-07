@@ -9,20 +9,23 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
 </head>
- 
+
 <body>
   <div class="jumbotron text-center">
     <h2>Welcome To GLEE2023</h2>
+    <a href="https://www.youtube.com/watch?v=24ujpW5nN5Q" rel="nofollow"><img height="300" src="https://camo.githubusercontent.com/73f6c1e909b03b5c5d4d8c9338f67a3232c32100de6dc78b7aed719742b3b375/68747470733a2f2f696d672e796f75747562652e636f6d2f76692f3234756a7057356e4e35512f302e6a7067" data-canonical-src="https://img.youtube.com/vi/24ujpW5nN5Q/0.jpg" style="max-width: 100%;"></a>
+    <form action="https://www.glee2023.org">
+      <input type="submit" value="GLEE website" />
+    </form>
   </div>
-    <a href="{{ url_for('about') }}">Sensor Info</a>
-    <a href="{{ url_for('accelerometer') }}">Accelerometer Inputs</a>
-    <a href="{{ url_for('magnetometer') }}">Magnetometer Inputs</a>
-    <a href="{{ url_for('TMP117') }}">Temperature Inputs</a>
+  
+  <a href="{{ url_for('about') }}">Sensor Info</a>
+  <a href="{{ url_for('accelerometer') }}">Accelerometer Inputs</a>
+  <a href="{{ url_for('magnetometer') }}">Magnetometer Inputs</a>
+  <a href="{{ url_for('TMP117') }}">Temperature Inputs</a>
 
   {% block body %}
   {% endblock %}
-
 </body>
 </html>
