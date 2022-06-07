@@ -2,14 +2,6 @@
 {% block body %}
 <p>Enter inputs here.</p>
 <form action="/data" method = "POST">
-<p><strong>Activate Accelerometer </strong>
-    <div class="wrapper-class">
-        <input type="radio" id="radio1" name='activate'>
-        <label for="radio1">yes (default)</label>
-        <input type="radio" id="radio2" name='activate'>
-        <label for="radio2">no</label>
-    </div>
-</p>
 <p><strong>Gyroscope mode (power-down, low-power, normal mode) </strong>
     <div class="wrapper-class">
         <input type="radio" id="radio1" name='mode'>
@@ -21,11 +13,46 @@
     </div>
 </p>
 
-<p><strong>Bypass mode</strong> <input type = "text" name = "bypass" /></p>
-<p><strong>FIFO mode </strong><input type = "text" name = "fifo" /></p>
-<p><strong>Continuous conversion mode </strong><input type = "text" name = "cont" /></p>
-<p><strong>Cont. to FIFO mode</strong> <input type = "text" name = "cont_to_fifo" /></p>
-<p><strong>Bypass to cont. Mode </strong> <input type = "text" name = "bypass_to_cont" /></p>
+<p><strong>Bypass mode</strong>
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p><strong>FIFO mode </strong>
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p><strong>Continuous conversion mode </strong>
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p><strong>Cont. to FIFO mode</strong> 
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p><strong>Bypass to cont. Mode </strong> 
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
 <p><input type = "submit" value = "Submit" /></p>
 </form>
 {% endblock %}

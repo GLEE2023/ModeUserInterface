@@ -22,4 +22,9 @@ def magnetometer():
 @app.route("/TMP117")
 def TMP117():
 	return render_template("TMP117.html")
+	
+@app.route("/home")
+def home():
+	return render_template("home.html")
+ 
 app.run(host='localhost', port=5000)

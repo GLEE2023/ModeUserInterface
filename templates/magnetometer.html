@@ -3,10 +3,45 @@
 <p>Enter inputs here.</p>
 <form action="/data" method = "POST">
 <p>BurstDataRate <input type = "text" name = "burstdatarate" /></p>
-<p>tuple threshold = (0,0,0) <input type = "text" name = "tuple_threshold" /></p>
-<p>single <input type = "text" name = "single" /></p>
-<p>burst <input type = "text" name = "burst" /></p>
-<p>WOC_Absolute<input type = "text" name = "WOC_Absolute" /></p>
-<p>WOC_Differential <input type = "text" name = "WOC_Differential" /></p>
+<p>WOC threshold (x,y,z) <input type = "text" name = "tuple_threshold" />
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p>single 
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p>burst 
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p>WOC_Absolute
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
+<p>WOC_Differential 
+    <div class="wrapper-class">
+        <input type="radio" id="radio1" name='activate'>
+        <label for="radio1">yes</label>
+        <input type="radio" id="radio2" name='activate'>
+        <label for="radio2">no</label>
+    </div>
+</p>
 
 {% endblock %}

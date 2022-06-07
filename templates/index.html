@@ -12,18 +12,31 @@
 </head>
 
 <body>
-  <div class="jumbotron text-center">
-    <h2>Welcome To GLEE2023</h2>
-    <a href="https://www.youtube.com/watch?v=24ujpW5nN5Q" rel="nofollow"><img height="300" src="https://camo.githubusercontent.com/73f6c1e909b03b5c5d4d8c9338f67a3232c32100de6dc78b7aed719742b3b375/68747470733a2f2f696d672e796f75747562652e636f6d2f76692f3234756a7057356e4e35512f302e6a7067" data-canonical-src="https://img.youtube.com/vi/24ujpW5nN5Q/0.jpg" style="max-width: 100%;"></a>
-    <form action="https://www.glee2023.org">
-      <input type="submit" value="GLEE website" />
-    </form>
-  </div>
-  
-  <a href="{{ url_for('about') }}">Sensor Info</a>
-  <a href="{{ url_for('accelerometer') }}">Accelerometer Inputs</a>
-  <a href="{{ url_for('magnetometer') }}">Magnetometer Inputs</a>
-  <a href="{{ url_for('TMP117') }}">Temperature Inputs</a>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Select</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a href="{{ url_for('home') }}" class="nav-item nav-link px-3">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a href="{{ url_for('about') }}" class="nav-item nav-link px-3">about</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('accelerometer') }}">Accelerometer Inputs</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('magnetometer') }}">Magnetometer Inputs</a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ url_for('TMP117') }}">Temperature Inputs</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
   {% block body %}
   {% endblock %}
