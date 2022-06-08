@@ -1,7 +1,9 @@
 {% extends "index.html" %}
 {% block body %}
 
-  <div class="container">
+  <div class="form-check">
+
+  <form action="/tmp117" method="POST">
     <h1>TMP117 temperature sensor</h1>
     <p>Features:</p>
     <ul>
@@ -15,6 +17,7 @@
         Programmable modes
       </li>
     </ul>
+    <img src="ConversionCycleDiagram.png" alt="diagram">
     <label for="modes">Select a mode for the TMP117 sensor:</label>
     <select class="" name="modes">
       <option value="CC">Continuous Conversion</option>
@@ -23,19 +26,236 @@
       <option value="alert">Therm/Alert mode</option>
     </select>
     <br></br>
-    <label for="average">Choose the averaging rate of the TMP117</label>
-    <form name="average">
-      <input type="radio" id="none" name="conv" value="none">
-      <label for="none">No averaging</label><br>
-      <input type="radio" id="8" name="conv" value="8">
-      <label for="8">8</label><br>
-      <input type="radio" id="32" name="conv" value="32">
-      <label for="32">32</label>
-      <input type="radio" id="64" name="conv" value="64">
-      <label for="64">64</label>
+      <table class="table" name="convTable">
+        <tr>
+          <th>CONV bits</th>
+          <th>No averaging</th>
+          <th>8 averages</th>
+          <th>32 averages</th>
+          <th>64 averages</th>
+        </tr>
+        <tr>
+          <th>000</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=0.0155,1 id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              15.5ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.125,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              125ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.5,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              500ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              1s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>001</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.125,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              125ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.125,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              125ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.5,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              500ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              1s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>010</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.250,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              250ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.250,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              250ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.5,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              500ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              1s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>011</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.5,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              500ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.5,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              500ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(0.5,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              500ms
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              1s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>100</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              1s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              1s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              1s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(1,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              1s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>101</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(4,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              4s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(4,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              4s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(4,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              4s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(4,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              4s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>110</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(8,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              8s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(8,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              8s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(8,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              8s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(8,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              8s
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <th>111</th>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(16,1) id="defaultCheck1">
+            <label class="form-check-label" for="defaultCheck1">
+              16s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(16,8) id="defaultCheck2">
+            <label class="form-check-label" for="defaultCheck2">
+              16s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(16,32) id="defaultCheck3">
+            <label class="form-check-label" for="defaultCheck3">
+              16s
+            </label>
+          </td>
+          <td>
+            <input class="form-check-input" type="radio" name="convCycle" value=(16,64) id="defaultCheck4">
+            <label class="form-check-label" for="defaultCheck4">
+              16s
+            </label>
+          </td>
+        </tr>
+      </table>
+      <button class="button" type="submit" name="button">Submit</button>
     </form>
-    <br></br>
-    
+    <p>Tuple: {{ power }}</p>
+
+
   </div>
 
 {% endblock %}
