@@ -1,0 +1,354 @@
+{% extends 'index.html' %}
+{% block body %}
+<div class="form-check">
+    <p>Enter inputs here.</p>
+    <form action="/tmp117" method="POST">
+      <h1>TMP117 temperature sensor</h1>
+      <p>Features:</p>
+      <ul>
+        <li>
+          Operating temperature range: -55°C to 150°C
+        </li>
+        <li>
+          Supply range: 1.7v - 5.5v -55°C to 70°C or 1.8v - 5.5v -55°C to 180°C
+        </li>
+        <li>
+          Programmable modes
+        </li>
+      </ul>
+      <img src="ConversionCycleDiagram.png" alt="diagram">
+      <label for="modes">Select a mode for the TMP117 sensor:</label>
+      <select class="" name="modes">
+        <option value="CC">Continuous Conversion</option>
+        <option value="SD">Shutdown</option>
+        <option value="oneshot">One Shot</option>
+        <option value="alert">Therm/Alert mode</option>
+      </select>
+      <br></br>
+        <table class="table" name="convTable">
+          <tr>
+            <th>CONV bits</th>
+            <th>No averaging</th>
+            <th>8 averages</th>
+            <th>32 averages</th>
+            <th>64 averages</th>
+          </tr>
+          <tr>
+            <th>000</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.0155,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                15.5ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.125,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                125ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.5,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                500ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                1s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>001</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.125,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                125ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.125,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                125ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.5,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                500ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                1s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>010</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.250,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                250ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.250,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                250ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.5,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                500ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                1s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>011</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.5,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                500ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.5,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                500ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=0.5,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                500ms
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                1s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>100</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                1s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                1s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                1s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=1,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                1s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>101</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=4,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                4s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=4,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                4s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=4,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                4s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=4,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                4s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>110</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=8,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                8s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=8,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                8s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=8,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                8s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=8,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                8s
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <th>111</th>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=16,1 id="defaultCheck1">
+              <label class="form-check-label" for="defaultCheck1">
+                16s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=16,8 id="defaultCheck2">
+              <label class="form-check-label" for="defaultCheck2">
+                16s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=16,32 id="defaultCheck3">
+              <label class="form-check-label" for="defaultCheck3">
+                16s
+              </label>
+            </td>
+            <td>
+              <input class="form-check-input" type="radio" name="convCycle" value=16,64 id="defaultCheck4">
+              <label class="form-check-label" for="defaultCheck4">
+                16s
+              </label>
+            </td>
+          </tr>
+        </table>
+        <h1>Accelerometer sensor</h1>
+        <p><strong>Gyroscope mode (power-down, low-power, normal mode) </strong>
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='acc1'>
+                <label for="radio1">power-down</label>
+                <input type="radio" id="radio2" name='acc1'>
+                <label for="radio2">low-power</label>
+                <input type="radio" id="radio3" name='acc1'>
+                <label for="radio3">normal (default)</label>
+            </div>
+        </p>
+        <p><strong>Bypass mode</strong>
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='acc2'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='acc2'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p><strong>FIFO mode </strong>
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='acc3'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='acc3'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p><strong>Continuous conversion mode </strong>
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='acc4'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='acc4'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p><strong>Cont. to FIFO mode</strong> 
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='acc5'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='acc5'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p><strong>Bypass to cont. Mode </strong> 
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='acc6'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='acc6'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <h1>Magnetometer sensor</h1>
+        <p>BurstDataRate <input type = "text" name = "burstdatarate" /></p>
+        <p>WOC threshold (x,y,z) <input type = "text" name = "tuple_threshold" />
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='magnetometer'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='magnetometer'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p>single 
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='magnetometer1'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='magnetometer1'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p>burst 
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='magnetometer2'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='magnetometer2'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p>WOC_Absolute
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='magnetometer3'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='magnetometer3'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <p>WOC_Differential 
+            <div class="wrapper-class">
+                <input type="radio" id="radio1" name='magnetometer4'>
+                <label for="radio1">yes</label>
+                <input type="radio" id="radio2" name='magnetometer4'>
+                <label for="radio2">no</label>
+            </div>
+        </p>
+        <button class="button" type="submit" name="button">Submit</button>
+      </form>
+      <p>Tuple: {{ power }}</p>
+  
+    </div>
+
+
+
+{% endblock %}
