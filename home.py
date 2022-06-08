@@ -16,11 +16,9 @@ def tmp117():
     if(request.method == 'GET'):
         return render_template("TMP117.html")
     elif(request.method == 'POST'):
-        convCycle = eval(request.form['convCycle'].split(', ')[0])#BAD PRACTICE! DONT USE!
-        #convCycle is a tuple, (conversion cycle time, averaging)
-        activeConversionTime = convCycle[1]*0.0155
-        standbyTime = convCycle[0] - activeConversionTime
-        amps = ((135*activeConversionTime) + (1.25*standbyTime))/convCycle[0]
-        debugArray = [convCycle, activeConversionTime, standbyTime, amps*3.3]
+        convCycle = request.form['convCycle'].split(',')
+        activeConversionTime = float(convCycle[1])*0.0155
+        standbyTime = float(convCycle[0]) - activeConversionTime
+        amps = ((135*activeConversionTime) + (1.25*standbyTime))/float(convCycle[0])
 
-        return render_template("TMP117.html", debugArray=debugArray)
+        return render_template("TMP117.html", power=amps*3.3)

@@ -37,7 +37,7 @@
         <tr>
           <th>000</th>
           <td>
-            <input class="form-check-input" type="radio" name="convCycle" value=(0.0155,1) id="defaultCheck1">
+            <input class="form-check-input" type="radio" name="convCycle" value=0.0155,1 id="defaultCheck1">
             <label class="form-check-label" for="defaultCheck1">
               15.5ms
             </label>
@@ -253,10 +253,8 @@
       </table>
       <button class="button" type="submit" name="button">Submit</button>
     </form>
-    <p>Tuple: {{ debugArray[0] }}</p>
-    <p>Active conversion time: {{ debugArray[1] }}</p>
-    <p>Standby time: {{ debugArray[2] }}</p>
-    <p>Estimated power consumption: {{ debugArray[3] }} µA</p>
+    <p>Tuple: {{ power }}</p>
+
 
   </div>
 
