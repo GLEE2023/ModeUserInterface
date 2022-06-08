@@ -1,6 +1,19 @@
 {% extends 'index.html' %}
 {% block body %}
 <div class="form-check">
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $("[name='modes']").change(function (){
+          var val = $(this).val();
+          if(val != "CC"){
+            $("[name='convTable']").hide();
+          }
+          if(val == "CC"){
+            $("[name='convTable']").show();
+          }
+        });
+      });
+    </script>
     <p>Enter inputs here.</p>
     <form action="/everything" method="POST">
       <h1>TMP117 temperature sensor</h1>
@@ -261,79 +274,33 @@
                 <label for="radio3">normal (default)</label>
             </div>
         </p>
-        <p><strong>Bypass mode</strong>
+        <p><strong>Accelerometer mode</strong>
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='Bypass' value = 'bypass_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='Bypass' value = 'bypass_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p><strong>FIFO mode </strong>
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='FIFO' value = 'FIFO_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='FIFO' value = 'FIFO_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p><strong>Continuous conversion mode </strong>
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='Cont' value = 'Cont_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='Cont' value = 'Cont_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p><strong>Cont. to FIFO mode</strong> 
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='ContToFifo' value = 'ContToFifo_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='ContToFifo' value = 'ContToFifo_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p><strong>Bypass to cont. Mode </strong> 
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='BypassToCont' value = 'BypassToCont_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='BypassToCont' value = 'BypassToCont_no'>
-                <label for="radio2">no</label>
+                <input type="radio" id="radio1" name='mode' value = "power_down">
+                <label for="radio1">Bypass</label>
+                <input type="radio" id="radio2" name='mode' value = "low_power">
+                <label for="radio2">FIFO</label>
+                <input type="radio" id="radio3" name='mode' value = "continuous_conversion">
+                <label for="radio3">Continuous conversion</label>
+                <input type="radio" id="radio3" name='mode' value = "cont_to_fifo">
+                <label for="radio3">Cont. to FIFO mode</label>
+                <input type="radio" id="radio3" name='mode' value = "byp_to_cont">
+                <label for="radio3">Bypass to cont. Mode</label>
             </div>
         </p>
         <h1>Magnetometer sensor</h1>
         <p>BurstDataRate <input type = "text" name = "burstdatarate" /></p>
         <p>WOC threshold (x,y,z) <input type = "text" name = "tuple_threshold" /></p>
-        <p>single 
+        <p><strong>Magnetometer mode</strong>
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='single' value = 'single_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='single' value = 'single_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p>burst 
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='burst' value = 'burst_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='burst' value = 'burst_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p>WOC_Absolute
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='WOC_Absolute' value = 'absolute_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='WOC_Absolute' value = 'absolute_no'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
-        <p>WOC_Differential 
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='WOC_Differential' value = 'diff_yes'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='WOC_Differential' value = 'diff_no'>
-                <label for="radio2">no</label>
+                <input type="radio" id="radio1" name='mode' value = "single">
+                <label for="radio1">Single</label>
+                <input type="radio" id="radio2" name='mode' value = "burst">
+                <label for="radio2">Burst</label>
+                <input type="radio" id="radio3" name='mode' value = "WOC_Absolute">
+                <label for="radio3">Wake on change - absolute</label>
+                <input type="radio" id="radio3" name='mode' value = "WOC_Differential">
+                <label for="radio3">Wake on change - differential</label>
             </div>
         </p>
         <button class="button" type="submit" name="button">Submit</button>
