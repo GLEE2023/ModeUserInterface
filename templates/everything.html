@@ -2,7 +2,7 @@
 {% block body %}
 <div class="form-check">
     <p>Enter inputs here.</p>
-    <form action="/tmp117" method="POST">
+    <form action="/everything" method="POST">
       <h1>TMP117 temperature sensor</h1>
       <p>Features:</p>
       <ul>
@@ -253,100 +253,94 @@
         <h1>Accelerometer sensor</h1>
         <p><strong>Gyroscope mode (power-down, low-power, normal mode) </strong>
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='acc1'>
+                <input type="radio" id="radio1" name='gyro' value = "power_down">
                 <label for="radio1">power-down</label>
-                <input type="radio" id="radio2" name='acc1'>
+                <input type="radio" id="radio2" name='gyro' value = "low_power">
                 <label for="radio2">low-power</label>
-                <input type="radio" id="radio3" name='acc1'>
+                <input type="radio" id="radio3" name='gyro' value = "normal">
                 <label for="radio3">normal (default)</label>
             </div>
         </p>
         <p><strong>Bypass mode</strong>
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='acc2'>
+                <input type="radio" id="radio1" name='Bypass' value = 'bypass_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='acc2'>
+                <input type="radio" id="radio2" name='Bypass' value = 'bypass_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p><strong>FIFO mode </strong>
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='acc3'>
+                <input type="radio" id="radio1" name='FIFO' value = 'FIFO_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='acc3'>
+                <input type="radio" id="radio2" name='FIFO' value = 'FIFO_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p><strong>Continuous conversion mode </strong>
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='acc4'>
+                <input type="radio" id="radio1" name='Cont' value = 'Cont_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='acc4'>
+                <input type="radio" id="radio2" name='Cont' value = 'Cont_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p><strong>Cont. to FIFO mode</strong> 
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='acc5'>
+                <input type="radio" id="radio1" name='ContToFifo' value = 'ContToFifo_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='acc5'>
+                <input type="radio" id="radio2" name='ContToFifo' value = 'ContToFifo_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p><strong>Bypass to cont. Mode </strong> 
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='acc6'>
+                <input type="radio" id="radio1" name='BypassToCont' value = 'BypassToCont_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='acc6'>
+                <input type="radio" id="radio2" name='BypassToCont' value = 'BypassToCont_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <h1>Magnetometer sensor</h1>
         <p>BurstDataRate <input type = "text" name = "burstdatarate" /></p>
-        <p>WOC threshold (x,y,z) <input type = "text" name = "tuple_threshold" />
-            <div class="wrapper-class">
-                <input type="radio" id="radio1" name='magnetometer'>
-                <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='magnetometer'>
-                <label for="radio2">no</label>
-            </div>
-        </p>
+        <p>WOC threshold (x,y,z) <input type = "text" name = "tuple_threshold" /></p>
         <p>single 
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='magnetometer1'>
+                <input type="radio" id="radio1" name='single' value = 'single_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='magnetometer1'>
+                <input type="radio" id="radio2" name='single' value = 'single_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p>burst 
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='magnetometer2'>
+                <input type="radio" id="radio1" name='burst' value = 'burst_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='magnetometer2'>
+                <input type="radio" id="radio2" name='burst' value = 'burst_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p>WOC_Absolute
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='magnetometer3'>
+                <input type="radio" id="radio1" name='WOC_Absolute' value = 'absolute_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='magnetometer3'>
+                <input type="radio" id="radio2" name='WOC_Absolute' value = 'absolute_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <p>WOC_Differential 
             <div class="wrapper-class">
-                <input type="radio" id="radio1" name='magnetometer4'>
+                <input type="radio" id="radio1" name='WOC_Differential' value = 'diff_yes'>
                 <label for="radio1">yes</label>
-                <input type="radio" id="radio2" name='magnetometer4'>
+                <input type="radio" id="radio2" name='WOC_Differential' value = 'diff_no'>
                 <label for="radio2">no</label>
             </div>
         </p>
         <button class="button" type="submit" name="button">Submit</button>
       </form>
       <p>Tuple: {{ power }}</p>
-  
+      <p>{{ inputs }}</p>
+
     </div>
 
 
