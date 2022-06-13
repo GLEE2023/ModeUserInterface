@@ -8,7 +8,7 @@ def ContinuousConversion():
 	standbyTime = float(convCycle[0]) - activeConversionTime
 	amps = ((135*activeConversionTime) + (1.25*standbyTime))/float(convCycle[0])
 
-def OneShot():
+#def OneShot():
 
 def TMP117data(time, frequency, mode, standby, averaging=8):
 	if mode == "CC": 
@@ -17,8 +17,7 @@ def TMP117data(time, frequency, mode, standby, averaging=8):
 	elif mode == "OS":
 		power = OneShot()
 
-	else: # low limit stuff
-
+	#else: # low limit stuff
 
 	return power, time #returns data and time as functions of time
 
