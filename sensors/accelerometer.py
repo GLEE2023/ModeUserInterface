@@ -136,7 +136,7 @@ class MPU6050():
         return arr
 
 
-dude = MPU6050(time_step=1, duration=10, mode="gyroscope_accelerometer", low_power_wakeup=1.25).runSim()
+dude = MPU6050(time_step=0.01, duration=10, mode="gyroscope_accelerometer", low_power_wakeup=1.25).runSim()
 
 print(dude)
 ax1 = plt.subplot(311)
@@ -149,3 +149,18 @@ plt.plot(dude[0], dude[2])
 plt.tick_params('x', labelbottom=False)
 
 plt.show()
+
+
+
+#np.join(getDataAccu(duration, params1), getDataAccu(duration, params2))
+#setMode()
+
+#REFACTORING:
+#Generate mode: return a dictionary outlining the parameters of a mode. Doing this would make the parameters in the 
+#constructor redundant.
+#Have some function handle both the modes and times for each mode. Two corresponding arrays perhaps, like the vectors we have been using.
+#Have a central sensor class, that handles these things plus some extra functionality. We can use inheritance to make each 
+#individual sensor.
+
+
+#mode = {"mode" : , "time step": , "duration": , "sample_rate_divisor": ,}
