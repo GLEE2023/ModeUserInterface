@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from matplotlib.widgets import Slider, Button
+
 
 class MPU6050():
 
@@ -135,18 +137,46 @@ class MPU6050():
             
         return arr
 
+    def setSampleRate(self, samplerate):
+        self.sample_rate_divisor = samplerate
 
-dude = MPU6050(time_step=0.01, duration=10, mode="gyroscope_accelerometer", low_power_wakeup=1.25).runSim()
 
-print(dude)
-ax1 = plt.subplot(311)
-plt.plot(dude[0], dude[1])
-plt.tick_params('x', labelsize=6)
+sensor = MPU6050(time_step=0.1, duration=10, mode="accelerometer_only", low_power_wakeup=0, loop_rate=1000)
+dude = sensor.runSim()
 
-ax2 = plt.subplot(312, sharex=ax1)
-plt.plot(dude[0], dude[2])
-# make these tick labels invisible
+f = plt.figure(figsize=(10,10))
+#print(dude)
+print(sensor.getDataAccumulated())
+ax1 = f.add_subplot(311)
+power_plot = plt.plot(dude[0], dude[1])
 plt.tick_params('x', labelbottom=False)
+ax1.set_ylim([0, 50])
+ax1.set_ylabel('mW')
+
+ax2 = f.add_subplot(312, sharex=ax1)
+data_plot, = plt.plot(dude[0], dude[2])
+# make these tick labels invisible
+plt.tick_params('x', labelsize=6)
+ax2.set_ylim([0, 50000])
+ax2.set_ylabel('Bytes')
+ax2.set_xlabel('Seconds')
+
+def update_samplerate(val):
+    sensor.setSampleRate(val)
+    data_plot.set_ydata(sensor.getDataAccumulated())
+    f.canvas.draw_idle()
+
+axfreq = plt.axes([0.25, 0.1, 0.65, 0.03])
+freq_slider = Slider(
+    ax=axfreq,
+    label='Sample Rate Divisor',
+    valmin=1,
+    valmax=255,
+    valinit=0,
+)
+freq_slider.on_changed(update_samplerate)
+
+
 
 plt.show()
 
