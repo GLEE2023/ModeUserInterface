@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from matplotlib.widgets import Slider, Button
+from matplotlib.widgets import Slider, RadioButtons
 
 
 class MPU6050():
@@ -31,21 +31,23 @@ class MPU6050():
         self.loop_rate = loop_rate
         #how fast the arduino loop will run. This value is kind of up in the air, but we predict that it may have an
         #affect on how fast we can read from the sensors depending on how much code is run in the loop, in Hz.
+        self.time = np.arange(0,self.duration,self.time_step)
 
-    def runSim(self):
+    def runSim(self, mode):
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
-        time = np.arange(0,self.duration,self.time_step) #time at which to collect data
+        #time = np.arange(0,self.duration,self.time_step) #time at which to collect data
         #active_vec: we are assuming that the accelerometer will constantly be on, since the slowest it will update is
         #once every 0.8 seconds.
-        power = self.getPowerUsage(time)
+        power = self.getPowerUsage(mode)
         data = self.getDataAccumulated()
 
-        return time, power, data
+        return self.time, power, data
 
-    def getPowerUsage(self, time):
+    def getPowerUsage(self, mode):
         #Calculates power when sensor is active. This value is used in conjunction with 
+        self.mode = mode
         power_used = 0
         if(self.low_power_wakeup == 1.25):
             accel_only_power_microamps = 10
@@ -62,21 +64,21 @@ class MPU6050():
         gyroscope_accelerometer_power_milliamps = 3.8
         gyroscope_accelerometer_DMP_power_milliamps = 3.9
         voltage = 3.3
-        if(self.mode == "accelerometer_only"):
+        if(mode == "accelerometer_only"):
             power_used = (accel_only_power_microamps * voltage) / 1000#converted to milliamps.
-        elif(self.mode == "gyroscope_only"):
+        elif(mode == "gyroscope_only"):
             power_used = gyroscope_only_power_milliamps * voltage
-        elif(self.mode == "gyroscope_DMP"):
+        elif(mode == "gyroscope_DMP"):
             power_used = gyroscope_DMP_power_milliamps * voltage
-        elif(self.mode == "gyroscope_accelerometer"):
+        elif(mode == "gyroscope_accelerometer"):
             power_used = gyroscope_accelerometer_power_milliamps * voltage
-        elif(self.mode == "gyroscope_accelerometer_DMP"):
+        elif(mode == "gyroscope_accelerometer_DMP"):
             power_used = gyroscope_accelerometer_DMP_power_milliamps * voltage
         else:
             print("Invalid mode entered.")
             return -1
         
-        power_usage = np.where(time, power_used, time)
+        power_usage = np.where(self.time, power_used, self.time)
         return power_usage
         #returns a vector of when power is used. Units are in mW.
 
@@ -96,7 +98,7 @@ class MPU6050():
             measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
         
         
-        bytes_per_second = 6 * measure_rate#6 is the number of bytes per measurement.
+        bytes_per_second = self.getBytesPerSecond() * measure_rate#6 is the number of bytes per measurement.
         bytes_over_duration = bytes_per_second*self.duration
         data_accumulated = np.linspace(0, bytes_over_duration, num=int(self.duration / self.time_step))
         return data_accumulated
@@ -140,15 +142,21 @@ class MPU6050():
     def setSampleRate(self, samplerate):
         self.sample_rate_divisor = samplerate
 
+    def getBytesPerSecond(self):
+        if(self.mode == "accelerometer_only" or self.mode == "accelerometer_only" or self.mode == "gyroscope_DMP"):
+            return 6
+        else:
+            return 12
+
 
 sensor = MPU6050(time_step=0.1, duration=10, mode="accelerometer_only", low_power_wakeup=0, loop_rate=1000)
-dude = sensor.runSim()
+dude = sensor.runSim("accelerometer_only")
 
 f = plt.figure(figsize=(10,10))
 #print(dude)
-print(sensor.getDataAccumulated())
+print(sensor.mode)
 ax1 = f.add_subplot(311)
-power_plot = plt.plot(dude[0], dude[1])
+power_plot, = plt.plot(dude[0], dude[1])
 plt.tick_params('x', labelbottom=False)
 ax1.set_ylim([0, 50])
 ax1.set_ylabel('mW')
@@ -175,6 +183,17 @@ freq_slider = Slider(
     valinit=0,
 )
 freq_slider.on_changed(update_samplerate)
+
+rax = plt.axes([0.05, 0.15, 0.3, 0.15])
+radio = RadioButtons(rax, ('Accelerometer only', 'Gyroscope only', 'Gyroscope and DMP', 'Gyroscope and accelerometer', 'Gyroscope, accelerometer, and DMP'))
+
+
+def hzfunc(label):
+    hzdict = {'Accelerometer only': sensor.getPowerUsage("accelerometer_only"), 'Gyroscope only': sensor.getPowerUsage("gyroscope_only"), 'Gyroscope and DMP': sensor.getPowerUsage("gyroscope_DMP"), 'Gyroscope and accelerometer': sensor.getPowerUsage("gyroscope_accelerometer"), 'Gyroscope, accelerometer, and DMP': sensor.getPowerUsage("gyroscope_accelerometer_DMP")}
+    ydata = hzdict[label]
+    power_plot.set_ydata(ydata)
+    plt.draw()
+radio.on_clicked(hzfunc)
 
 
 
