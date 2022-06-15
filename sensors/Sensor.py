@@ -10,4 +10,4 @@ class Sensor:
         #generate a dict
         return None
 
-    def  
+    def 
