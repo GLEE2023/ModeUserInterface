@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Sensor:
     def __init__(self, **config):
@@ -41,9 +42,30 @@ class Sensor:
                 arr[i] = 1
         return arr
     
-    def plotData(self):
-        
-        pass
+    def plotData(self, power_vector, data_vector, time_vector, **params):
+        #basic function to plot power and data vs time. 
+        f = plt.figure(figsize=(10,10))
+        ax1 = f.add_subplot(311)
+        power_plot, = plt.plot(time_vector, power_vector)
+        plt.tick_params('x', labelbottom=False)
+        power_value_limit = [0,50]
+        ax1.set_ylim(power_value_limit)
+        ax1.set_ylabel('mW')
+
+        ax2 = f.add_subplot(312, sharex=ax1)
+        data_plot, = plt.plot(time_vector, data_vector)
+        # make these tick labels invisible
+        plt.tick_params('x', labelsize=6)
+        data_value_limit = [0,500]
+        ax1.set_ylim(data_value_limit)
+        ax2.set_ylabel('Bytes')
+        ax2.set_xlabel('Seconds')
+        plt.show()
+
+    def showParams(self):
+        for k,v in self.__dict__.items():
+            print(k,v)
+
 #data acculumation testing stuff below
 timearr = np.arange(0,0.5,0.0155)
 dude = Sensor(time=timearr, time_step=0.0155)
@@ -51,4 +73,5 @@ active = dude.getActiveTimes([[0.05,0.1],[0.3,0.4]])
 data = dude.getDataAccumulated(active, 16)
 
 #print(active)
-print(data, len(data))
+#print(data, len(data))
+dude.showParams()
