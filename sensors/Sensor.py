@@ -5,14 +5,23 @@ class Sensor:
         self.__dict__.update(config)
         #config is a dictionary of variable length.
         #Initialization of the child sensors would be like this:
-        #accelerometer(mode="accelerometer_only", sample_rate_divisor=142)
+        #accelerometer(mode="accelerometer_only", sample_rate_divisor=142, etc=etc)
 
     def getPowerUsage(self,power_used,time):
+        #Not working!
         power = np.full_like(time, power_used)
         return power #things ready to be plotted
 
-    def getDataAccumulated():
-        return None
+    def getDataAccumulated(self, active_vector, bits_per_second):
+        #in development!
+        data_vector = []
+        tracker = 0
+        for i in active_vector:
+            if i != 0:
+                tracker += bits_per_second
+            data_vector.append(tracker)
+            
+        return data_vector
     
     def getActiveTimes(self, active_times):
         #time = time.tolist()
@@ -32,13 +41,14 @@ class Sensor:
                 arr[i] = 1
         return arr
     
-    #paramDict = {"mode":"cc","param1":nun,"param2"......}
-    # modes options: "cc", "sleep",
+    def plotData(self):
+        
+        pass
+#data acculumation testing stuff below
+timearr = np.arange(0,0.5,0.0155)
+dude = Sensor(time=timearr, time_step=0.0155)
+active = dude.getActiveTimes([[0.05,0.1],[0.3,0.4]])
+data = dude.getDataAccumulated(active, 16)
 
-    #parameters for "CC"
-    #   param1: ""
-    #   param2:""
-
-
-    # paramaters for fjjsdjlkfsdfjklfdjkls
-
+#print(active)
+print(data, len(data))
