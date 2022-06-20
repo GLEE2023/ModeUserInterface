@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.widgets import Slider, RadioButtons
 from Sensor import Sensor
+from typing import List
 
 
 class MPU6050(Sensor):
@@ -38,6 +39,9 @@ class MPU6050(Sensor):
         super(MPU6050, self).__init__(**params)
         #All params configured in parent function!
 
+    def checkParams(self, params):
+        pass
+
     def runSim(self, mode):
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
@@ -45,13 +49,14 @@ class MPU6050(Sensor):
         time = np.arange(0,self.duration,self.time_step) #time at which to collect data
         #active_vec: we are assuming that the accelerometer will constantly be on, since the slowest it will update is
         #once every 0.8 seconds.
-        power = self.getPowerUsage(mode, time)
+        #power = self.getPowerUsage(mode, time)
         data = self.getDataAccumulated()
 
-        return time, power, data
+        return time, data
 
-    def getPowerUsage(self, mode, time):
-        #Calculates power when sensor is active. This value is used in conjunction with 
+    def getPowerUsage(self, mode):
+        #Calculates power when sensor is active. This value is used in conjunction with
+
         self.mode = mode
         power_used = 0
         if(self.low_power_wakeup == 1.25):
@@ -83,9 +88,27 @@ class MPU6050(Sensor):
             print("Invalid mode entered.")
             return -1
         
-        return Sensor.getPowerUsage(self, power_used, time)
+        return power_used
         #returns a vector of when power is used. Units are in mW.
 
+    def getActiveTimes(self, active_times: List[tuple]) -> List:
+        #active times is a list of tuples. First two elements are start and end times, third is 
+        length = len(self.time)
+        arr = [0] * length # creating corresponding power array to time intervals, default values 
+
+        # check if the given start and end time is a valid value in the time array and round to nearest value 
+        for times in active_times:
+            start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
+            end_index = int(times[1] / self.time_step)
+            
+            if start_index < 0 or end_index > len(self.time): 
+                print("Error. Index not valid.")
+                return -1
+            
+            for i in range(start_index, end_index+1):
+                arr[i] = self.getPowerUsage(times[2])
+        return arr
+    
     def getDataAccumulated(self):
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
         #https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
@@ -110,62 +133,61 @@ class MPU6050(Sensor):
     def setSampleRate(self, samplerate):
         self.sample_rate_divisor = samplerate
 
+
     def getBytesPerSecond(self):
-        if(self.mode == "accelerometer_only" or self.mode == "accelerometer_only" or self.mode == "gyroscope_DMP"):
+        if(self.mode == "accelerometer_only" or self.mode == "gyroscope_only" or self.mode == "gyroscope_DMP"):
             return 6
         else:
             return 12
 
 
-sensor = MPU6050(time_step=0.1, duration=10, mode="accelerometer_only", low_power_wakeup=0, loop_rate=1000, digital_low_pass=0, sample_rate_divisor=0)
-dude = sensor.runSim("accelerometer_only")
 
-f = plt.figure(figsize=(10,10))
-#print(dude)
-print(sensor.mode)
-ax1 = f.add_subplot(311)
-power_plot, = plt.plot(dude[0], dude[1])
-plt.tick_params('x', labelbottom=False)
-ax1.set_ylim([0, 50])
-ax1.set_ylabel('mW')
+# f = plt.figure(figsize=(10,10))
+# #print(dude)
+# print(sensor.mode)
+# ax1 = f.add_subplot(311)
+# power_plot, = plt.plot(dude[0], dude[1])
+# plt.tick_params('x', labelbottom=False)
+# ax1.set_ylim([0, 50])
+# ax1.set_ylabel('mW')
 
-ax2 = f.add_subplot(312, sharex=ax1)
-data_plot, = plt.plot(dude[0], dude[2])
-# make these tick labels invisible
-plt.tick_params('x', labelsize=6)
-ax2.set_ylim([0, 50000])
-ax2.set_ylabel('Bytes')
-ax2.set_xlabel('Seconds')
+# ax2 = f.add_subplot(312, sharex=ax1)
+# data_plot, = plt.plot(dude[0], dude[2])
+# # make these tick labels invisible
+# plt.tick_params('x', labelsize=6)
+# ax2.set_ylim([0, 50000])
+# ax2.set_ylabel('Bytes')
+# ax2.set_xlabel('Seconds')
 
-def update_samplerate(val):
-    sensor.setSampleRate(val)
-    data_plot.set_ydata(sensor.getDataAccumulated())
-    f.canvas.draw_idle()
+# def update_samplerate(val):
+#     sensor.setSampleRate(val)
+#     data_plot.set_ydata(sensor.getDataAccumulated())
+#     f.canvas.draw_idle()
 
-axfreq = plt.axes([0.25, 0.1, 0.65, 0.03])
-freq_slider = Slider(
-    ax=axfreq,
-    label='Sample Rate Divisor',
-    valmin=1,
-    valmax=255,
-    valinit=0,
-)
-freq_slider.on_changed(update_samplerate)
+# axfreq = plt.axes([0.25, 0.1, 0.65, 0.03])
+# freq_slider = Slider(
+#     ax=axfreq,
+#     label='Sample Rate Divisor',
+#     valmin=1,
+#     valmax=255,
+#     valinit=0,
+# )
+# freq_slider.on_changed(update_samplerate)
 
-rax = plt.axes([0.05, 0.15, 0.3, 0.15])
-radio = RadioButtons(rax, ('Accelerometer only', 'Gyroscope only', 'Gyroscope and DMP', 'Gyroscope and accelerometer', 'Gyroscope, accelerometer, and DMP'))
+# rax = plt.axes([0.05, 0.15, 0.3, 0.15])
+# radio = RadioButtons(rax, ('Accelerometer only', 'Gyroscope only', 'Gyroscope and DMP', 'Gyroscope and accelerometer', 'Gyroscope, accelerometer, and DMP'))
 
 
-def hzfunc(label):
-    hzdict = {'Accelerometer only': sensor.getPowerUsage("accelerometer_only"), 'Gyroscope only': sensor.getPowerUsage("gyroscope_only"), 'Gyroscope and DMP': sensor.getPowerUsage("gyroscope_DMP"), 'Gyroscope and accelerometer': sensor.getPowerUsage("gyroscope_accelerometer"), 'Gyroscope, accelerometer, and DMP': sensor.getPowerUsage("gyroscope_accelerometer_DMP")}
-    ydata = hzdict[label]
-    power_plot.set_ydata(ydata)
-    plt.draw()
-radio.on_clicked(hzfunc)
+# def hzfunc(label):
+#     hzdict = {'Accelerometer only': sensor.getPowerUsage("accelerometer_only"), 'Gyroscope only': sensor.getPowerUsage("gyroscope_only"), 'Gyroscope and DMP': sensor.getPowerUsage("gyroscope_DMP"), 'Gyroscope and accelerometer': sensor.getPowerUsage("gyroscope_accelerometer"), 'Gyroscope, accelerometer, and DMP': sensor.getPowerUsage("gyroscope_accelerometer_DMP")}
+#     ydata = hzdict[label]
+#     power_plot.set_ydata(ydata)
+#     plt.draw()
+# radio.on_clicked(hzfunc)
 
 
 
-plt.show()
+# plt.show()
 
 
 
@@ -181,3 +203,8 @@ plt.show()
 
 
 #mode = {"mode" : , "time step": , "duration": , "sample_rate_divisor": ,}
+timeVector = np.arange(0,11,0.1)
+test = MPU6050(time=timeVector, time_step=0.1, duration=11, mode="accelerometer_only", low_power_wakeup=0, loop_rate=60, digital_low_pass=0, sample_rate_divisor=255)
+power = test.getActiveTimes([(0,5,"gyroscope_accelerometer_DMP"), (5,7.5,"accelerometer_only"), (7.5,10,"gyroscope_only")])
+data = test.getDataAccumulated()
+test.plotData(power, data, timeVector)
