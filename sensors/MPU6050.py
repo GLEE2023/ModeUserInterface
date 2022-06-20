@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 from matplotlib.widgets import Slider, RadioButtons
 from Sensor import Sensor
 from typing import List
@@ -54,18 +53,22 @@ class MPU6050(Sensor):
 
         return time, data
 
-    def getPowerUsage(self, mode):
+    def getModePower(self, mode):
         #Calculates power when sensor is active. This value is used in conjunction with
 
         self.mode = mode
         power_used = 0
-        if(self.low_power_wakeup == 1.25):
+        if(mode == "low_power_wakeup_1.25"):
+            self.low_power_wakeup = 1.25
             accel_only_power_microamps = 10
-        elif(self.low_power_wakeup == 5):
+        elif(mode == "low_power_wakeup_5"):
+            self.low_power_wakeup = 1.25
             accel_only_power_microamps = 20
-        elif(self.low_power_wakeup == 20):
+        elif(mode == "low_power_wakeup_20"):
+            self.low_power_wakeup = 1.25
             accel_only_power_microamps = 70
-        elif(self.low_power_wakeup == 40):
+        elif(mode == "low_power_wakeup_40"):
+            self.low_power_wakeup = 1.25
             accel_only_power_microamps = 140
         else:
             accel_only_power_microamps = 500
@@ -84,6 +87,8 @@ class MPU6050(Sensor):
             power_used = gyroscope_accelerometer_power_milliamps * voltage
         elif(mode == "gyroscope_accelerometer_DMP"):
             power_used = gyroscope_accelerometer_DMP_power_milliamps * voltage
+        elif(mode[0:16] == "low_power_wakeup"):
+            pass
         else:
             print("Invalid mode entered.")
             return -1
@@ -91,11 +96,11 @@ class MPU6050(Sensor):
         return power_used
         #returns a vector of when power is used. Units are in mW.
 
-    def getActiveTimes(self, active_times: List[tuple]) -> List:
+    def getPowerVector(self, active_times: List[tuple]) -> List:
         #active times is a list of tuples. First two elements are start and end times, third is 
         length = len(self.time)
         arr = [0] * length # creating corresponding power array to time intervals, default values 
-
+        dataarr = [0] * length
         # check if the given start and end time is a valid value in the time array and round to nearest value 
         for times in active_times:
             start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
@@ -105,14 +110,18 @@ class MPU6050(Sensor):
                 print("Error. Index not valid.")
                 return -1
             
-            for i in range(start_index, end_index+1):
-                arr[i] = self.getPowerUsage(times[2])
-        return arr
+            for i in range(start_index, end_index):
+                arr[i] = self.getModePower(times[2])
+                if i == 0:
+                    dataarr[i] = self.getBytesPerSecond(times[2])
+                else:
+                    dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
+            
+        return arr, dataarr
     
     def getDataAccumulated(self):
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
         #https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
-
         measure_rate = 0
         #calculate sample rate.
         gyroscope_output_rate = (8000, 1000)[self.digital_low_pass == 1]#ternary operator. like x==1 ? y : z
@@ -125,7 +134,7 @@ class MPU6050(Sensor):
             measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
         
         
-        bytes_per_second = self.getBytesPerSecond() * measure_rate#6 is the number of bytes per measurement.
+        bytes_per_second = self.getBytesPerSecond(self.mode) * measure_rate#6 is the number of bytes per measurement.
         bytes_over_duration = bytes_per_second*self.duration
         data_accumulated = np.linspace(0, bytes_over_duration, num=int(self.duration / self.time_step))
         return data_accumulated
@@ -134,8 +143,8 @@ class MPU6050(Sensor):
         self.sample_rate_divisor = samplerate
 
 
-    def getBytesPerSecond(self):
-        if(self.mode == "accelerometer_only" or self.mode == "gyroscope_only" or self.mode == "gyroscope_DMP"):
+    def getBytesPerSecond(self, mode):
+        if(mode == "accelerometer_only" or mode == "gyroscope_only" or mode == "gyroscope_DMP" or mode[0:16] == "low_power_wakeup"):
             return 6
         else:
             return 12
@@ -203,8 +212,3 @@ class MPU6050(Sensor):
 
 
 #mode = {"mode" : , "time step": , "duration": , "sample_rate_divisor": ,}
-timeVector = np.arange(0,11,0.1)
-test = MPU6050(time=timeVector, time_step=0.1, duration=11, mode="accelerometer_only", low_power_wakeup=0, loop_rate=60, digital_low_pass=0, sample_rate_divisor=255)
-power = test.getActiveTimes([(0,5,"gyroscope_accelerometer_DMP"), (5,7.5,"accelerometer_only"), (7.5,10,"gyroscope_only")])
-data = test.getDataAccumulated()
-test.plotData(power, data, timeVector)

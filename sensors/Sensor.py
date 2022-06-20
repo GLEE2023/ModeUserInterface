@@ -64,8 +64,8 @@ class Sensor:
         data_plot, = plt.plot(time_vector, data_vector)
         # make these tick labels invisible
         plt.tick_params('x', labelsize=6)
-        data_value_limit = [0,500]
-        ax2.set_ylim(data_value_limit)
+        #data_value_limit = [0,500]
+        #ax2.set_ylim(data_value_limit)
         ax2.set_ylabel('Bytes')
         ax2.set_xlabel('Seconds')
         plt.show()
