@@ -41,17 +41,18 @@ class MPU6050(Sensor):
     def checkParams(self, params):
         pass
 
-    def runSim(self, mode):
+    def runSim(self, active_times: List[tuple]) -> int:
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
-        time = np.arange(0,self.duration,self.time_step) #time at which to collect data
-        #active_vec: we are assuming that the accelerometer will constantly be on, since the slowest it will update is
-        #once every 0.8 seconds.
-        #power = self.getPowerUsage(mode, time)
-        data = self.getDataAccumulated()
-
-        return time, data
+        self.time = np.arange(0,self.duration,self.time_step) #time at which to collect data
+        try:
+            power, data = self.getVectors(active_times)
+            self.plotData(power,data,self.time)
+            return 1
+        except TypeError:
+            print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.")
+            return -1
 
     def getModePower(self, mode):
         #Calculates power when sensor is active. This value is used in conjunction with
@@ -62,13 +63,13 @@ class MPU6050(Sensor):
             self.low_power_wakeup = 1.25
             accel_only_power_microamps = 10
         elif(mode == "low_power_wakeup_5"):
-            self.low_power_wakeup = 1.25
+            self.low_power_wakeup = 5
             accel_only_power_microamps = 20
         elif(mode == "low_power_wakeup_20"):
-            self.low_power_wakeup = 1.25
+            self.low_power_wakeup = 20
             accel_only_power_microamps = 70
         elif(mode == "low_power_wakeup_40"):
-            self.low_power_wakeup = 1.25
+            self.low_power_wakeup = 40
             accel_only_power_microamps = 140
         else:
             accel_only_power_microamps = 500
@@ -77,7 +78,7 @@ class MPU6050(Sensor):
         gyroscope_accelerometer_power_milliamps = 3.8
         gyroscope_accelerometer_DMP_power_milliamps = 3.9
         voltage = 3.3
-        if(mode == "accelerometer_only"):
+        if(mode == "accelerometer_only" or mode[0:16] == "low_power_wakeup"):
             power_used = (accel_only_power_microamps * voltage) / 1000#converted to milliamps.
         elif(mode == "gyroscope_only"):
             power_used = gyroscope_only_power_milliamps * voltage
@@ -87,8 +88,6 @@ class MPU6050(Sensor):
             power_used = gyroscope_accelerometer_power_milliamps * voltage
         elif(mode == "gyroscope_accelerometer_DMP"):
             power_used = gyroscope_accelerometer_DMP_power_milliamps * voltage
-        elif(mode[0:16] == "low_power_wakeup"):
-            pass
         else:
             print("Invalid mode entered.")
             return -1
@@ -96,7 +95,7 @@ class MPU6050(Sensor):
         return power_used
         #returns a vector of when power is used. Units are in mW.
 
-    def getPowerVector(self, active_times: List[tuple]) -> List:
+    def getVectors(self, active_times: List[tuple]) -> tuple:
         #active times is a list of tuples. First two elements are start and end times, third is 
         length = len(self.time)
         arr = [0] * length # creating corresponding power array to time intervals, default values 
@@ -118,36 +117,26 @@ class MPU6050(Sensor):
                     dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
             
         return arr, dataarr
-    
-    def getDataAccumulated(self):
+
+    def getBytesPerSecond(self, mode):
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
         #https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
         measure_rate = 0
+        self.getModePower(mode)
         #calculate sample rate.
         gyroscope_output_rate = (8000, 1000)[self.digital_low_pass == 1]#ternary operator. like x==1 ? y : z
         sample_rate = gyroscope_output_rate / (1 + self.sample_rate_divisor) #how fast measurements are written to
         #accelerometer measurement registers, in Hz.
 
-        if(self.low_power_wakeup > 0):
+        if(mode[0:16] == "low_power_wakeup"):
             measure_rate = self.low_power_wakeup
         else:
             measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
         
-        
-        bytes_per_second = self.getBytesPerSecond(self.mode) * measure_rate#6 is the number of bytes per measurement.
-        bytes_over_duration = bytes_per_second*self.duration
-        data_accumulated = np.linspace(0, bytes_over_duration, num=int(self.duration / self.time_step))
-        return data_accumulated
-
-    def setSampleRate(self, samplerate):
-        self.sample_rate_divisor = samplerate
-
-
-    def getBytesPerSecond(self, mode):
         if(mode == "accelerometer_only" or mode == "gyroscope_only" or mode == "gyroscope_DMP" or mode[0:16] == "low_power_wakeup"):
-            return 6
+            return 6*measure_rate
         else:
-            return 12
+            return 12*measure_rate
 
 
 
