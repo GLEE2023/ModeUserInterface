@@ -56,8 +56,8 @@ class Sensor:
         ax1 = f.add_subplot(311)
         power_plot, = plt.plot(time_vector, power_vector)
         plt.tick_params('x', labelbottom=False)
-        power_value_limit = [0,50]
-        ax1.set_ylim(power_value_limit)
+        #power_value_limit = [0,0.1]
+        #ax1.set_ylim(power_value_limit)
         ax1.set_ylabel('mW')
 
         ax2 = f.add_subplot(312, sharex=ax1)
