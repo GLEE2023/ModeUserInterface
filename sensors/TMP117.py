@@ -24,14 +24,14 @@ class TMP117():
         standbyTime = convCycleTime - activeConversionTime
         if convCycleTime == 0:
             current = convCycleTime
-        else: current = ((activeCurrentConsumption*activeConversionTime) + (standByCurrentConsumption*standbyTime)) / convCycleTime
+        else: current = ((activeCurrentConsumption*activeConversionTime)+(standByCurrentConsumption*standbyTime))/convCycleTime
         power = (current * 3.3) / 1000
         
         return power
     
     def getAllModesPower(self):
         length = len(self.time)
-        arr = [0] * length # creating corresponding power array to time intervals, default values
+        power_arr = [0] * length # creating corresponding power array to time intervals, default values
 
         # check if the given start and end time is a valid value in the time array and round to nearest value 
         for times in self.activeTimeParams:
@@ -46,7 +46,7 @@ class TMP117():
             power = self.computePower(self.activeTimeParams[times][0], self.activeTimeParams[times][1])
             for i in range(start_index, end_index):
                 power_arr[i] = power
-
+        print(power_arr)
         return power_arr
             
     def getAllModesData(self):
