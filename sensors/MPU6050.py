@@ -38,9 +38,6 @@ class MPU6050(Sensor):
         super(MPU6050, self).__init__(**params)
         #All params configured in parent function!
 
-    def checkParams(self, params):
-        pass
-
     def runSim(self, active_times: List[tuple]) -> int:
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
@@ -48,7 +45,7 @@ class MPU6050(Sensor):
         self.time = np.arange(0,self.duration,self.time_step) #time at which to collect data
         try:
             power, data = self.getVectors(active_times)
-            self.plotData(power,data,self.time)
+            self.plotData(power, data, self.time, active_times)
             return 1
         except TypeError:
             print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.")
@@ -104,7 +101,6 @@ class MPU6050(Sensor):
         for times in active_times:
             start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
             end_index = int(times[1] / self.time_step)
-            
             if start_index < 0 or end_index > len(self.time): 
                 print("Error. Index not valid.")
                 return -1
@@ -138,66 +134,6 @@ class MPU6050(Sensor):
         else:
             return 12*measure_rate
 
+    def getModesArray(self, desription: str) -> List[tuple]:
+        pass
 
-
-# f = plt.figure(figsize=(10,10))
-# #print(dude)
-# print(sensor.mode)
-# ax1 = f.add_subplot(311)
-# power_plot, = plt.plot(dude[0], dude[1])
-# plt.tick_params('x', labelbottom=False)
-# ax1.set_ylim([0, 50])
-# ax1.set_ylabel('mW')
-
-# ax2 = f.add_subplot(312, sharex=ax1)
-# data_plot, = plt.plot(dude[0], dude[2])
-# # make these tick labels invisible
-# plt.tick_params('x', labelsize=6)
-# ax2.set_ylim([0, 50000])
-# ax2.set_ylabel('Bytes')
-# ax2.set_xlabel('Seconds')
-
-# def update_samplerate(val):
-#     sensor.setSampleRate(val)
-#     data_plot.set_ydata(sensor.getDataAccumulated())
-#     f.canvas.draw_idle()
-
-# axfreq = plt.axes([0.25, 0.1, 0.65, 0.03])
-# freq_slider = Slider(
-#     ax=axfreq,
-#     label='Sample Rate Divisor',
-#     valmin=1,
-#     valmax=255,
-#     valinit=0,
-# )
-# freq_slider.on_changed(update_samplerate)
-
-# rax = plt.axes([0.05, 0.15, 0.3, 0.15])
-# radio = RadioButtons(rax, ('Accelerometer only', 'Gyroscope only', 'Gyroscope and DMP', 'Gyroscope and accelerometer', 'Gyroscope, accelerometer, and DMP'))
-
-
-# def hzfunc(label):
-#     hzdict = {'Accelerometer only': sensor.getPowerUsage("accelerometer_only"), 'Gyroscope only': sensor.getPowerUsage("gyroscope_only"), 'Gyroscope and DMP': sensor.getPowerUsage("gyroscope_DMP"), 'Gyroscope and accelerometer': sensor.getPowerUsage("gyroscope_accelerometer"), 'Gyroscope, accelerometer, and DMP': sensor.getPowerUsage("gyroscope_accelerometer_DMP")}
-#     ydata = hzdict[label]
-#     power_plot.set_ydata(ydata)
-#     plt.draw()
-# radio.on_clicked(hzfunc)
-
-
-
-# plt.show()
-
-
-
-#np.join(getDataAccu(duration, params1), getDataAccu(duration, params2))
-#setMode()
-
-#REFACTORING:
-#Generate mode: return a dictionary outlining the parameters of a mode. Doing this would make the parameters in the 
-#constructor redundant.
-#Have some function handle both the modes and times for each mode. Two corresponding arrays perhaps, like the vectors we have been using.
-#Have a central sensor class, that handles these things plus some extra functionality. We can use inheritance to make each 
-#individual sensor.
-
-
-#mode = {"mode" : , "time step": , "duration": , "sample_rate_divisor": ,}
