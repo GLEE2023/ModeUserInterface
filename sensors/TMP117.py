@@ -1,31 +1,35 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
-from IPython.display import Image
-from matplotlib.widgets import Slider, RadioButtons
+import matplotlib.pyplot as plt
 
 class TMP117():
     def __init__(self, time_step, duration, activeTimeParams): 
         self.time_step = time_step
         self.duration = duration
-        self.time = np.arange(0, duration, self.time_step) #time at which to collect data
+        self.time = np.arange(0, duration, time_step) #time at which to collect data
         self.activeTimeParams = activeTimeParams
         
-    def computePower(self, num_averages, conv_cycle):
-        standby = 1.25 / 1000 # default power when active conversion is off
-        power = 0
-
-        #if mode == "CC":
-        standByCurrentConsumption = 1.25
-        activeCurrentConsumption = 135
-        convCycleTime = conv_cycle
-        num_averages = num_averages
+#    def errorCheck():
+#         for 
+#             if convCycleTime == 0:
+#                 print("error. conv cycle time cannot be zero, please check parameters again.")
+                
+    def computePower(self, num_averages, convCycleTime, mode):
+        activeCurrentConsumption = 135 # micro amps
         activeConversionTime = num_averages*0.0155
+
+        standByCurrentConsumption = 1.25 # micro amps
         standbyTime = convCycleTime - activeConversionTime
-        if convCycleTime == 0:
-            current = convCycleTime
-        else: current = ((activeCurrentConsumption*activeConversionTime)+(standByCurrentConsumption*standbyTime))/convCycleTime
-        power = (current * 3.3) / 1000
+        
+        SDcurrent = 250/ 1000000 # micro amps
+        
+        if mode == "CC":
+            current = ((activeCurrentConsumption*activeConversionTime)+(standByCurrentConsumption*standbyTime))/convCycleTime
+
+        elif mode == "OS":
+            current = ((activeCurrentConsumption*activeConversionTime)+(SDcurrent*standbyTime))/convCycleTime
+            
+        power = (current * 3.3)/1000 # milli watts
         
         return power
     
@@ -43,10 +47,12 @@ class TMP117():
                 return -1
 
             mode = self.activeTimeParams[times][2]
-            power = self.computePower(self.activeTimeParams[times][0], self.activeTimeParams[times][1])
+            averages = self.activeTimeParams[times][0]
+            convCycle = self.activeTimeParams[times][1]
+            power = self.computePower(averages, convCycle, mode)
             for i in range(start_index, end_index):
                 power_arr[i] = power
-        print(power_arr)
+        
         return power_arr
             
     def getAllModesData(self):
@@ -60,35 +66,35 @@ class TMP117():
         Storing 16-bit value at the end of each conversion cycle
         '''
         
-        #NOT SURE HOW CONV CYCLE PLAYS INTO THIS
         bits_per_cycle = 16
         
-        how_many_timesteps_in_active_period = active_period/timestep
-        
-        bits_per_timestep = active_period/16
-        
         length = len(self.time)
-        arr = [0] * length # creating corresponding power array to time intervals, default values 
-        increment = 16
-        data = 0
-
-        for index, mode in enumerate(arr):
-            # first time sensor is turned on
+        data_arr = [0] * length # creating corresponding power array to time intervals, default values 
+        data_accumulated = 0
+        
+        for times in self.activeTimeParams: # for each active period
+            start_index = int(times[0] / self.time_step) 
+            end_index = int(times[1] / self.time_step)
             
-            if mode == 0:
-                data_arr[index] = data
-
-            elif mode == "OS":
-                data = data + 16
-                data_arr[index] = data
+            #calculating data per step in active time period
+            convCycle = self.activeTimeParams[times][1]
+            bits_per_second = bits_per_cycle / convCycle # bits per second
+            activeTimeTotal = times[1]-times[0] # getting num of seconds of active period
+            bits_total = bits_per_second * activeTimeTotal # total bits during that active period
+            num_steps = end_index-start_index 
+            bits_per_step = bits_total / num_steps
+            #indexes[time] = bits_per_step
             
-            elif mode == "CC":
-                pass
+            for i in range(start_index, length):
+                if i < end_index:
+                    data_accumulated += bits_per_step
+                    
+                data_arr[i] = data_accumulated 
             
         return data_arr
 
     def Simulation(self):
         power = self.getAllModesPower()
-        data = []
+        data = self.getAllModesData()
 
-        return power, data
+        return power, data, self.time
