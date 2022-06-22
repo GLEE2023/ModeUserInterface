@@ -47,8 +47,8 @@ class MPU6050(Sensor):
             power, data = self.getVectors(active_times)
             self.plotData(power, data, self.time, active_times)
             return 1
-        except TypeError:
-            print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.")
+        except TypeError as e:
+            print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.", e)
             return -1
 
     def getModePower(self, mode):

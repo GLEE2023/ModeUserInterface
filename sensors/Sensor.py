@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from typing import List
 import random
 
 class Sensor:
@@ -70,6 +69,7 @@ class Sensor:
         line = np.full_like(time_vector, 1)
         
         ax1 = f.add_subplot(312, sharex=ax3)
+        plt.grid(visible=True)
         power_plot, = plt.plot(time_vector, power_vector)
         plt.tick_params('x', labelbottom=False)
         #power_value_limit = [0,0.1]
@@ -77,6 +77,7 @@ class Sensor:
         ax1.set_ylabel('mW')
 
         ax2 = f.add_subplot(313, sharex=ax3)
+        plt.grid(visible=True)
         data_plot, = plt.plot(time_vector, data_vector)
         # make these tick labels invisible
         plt.tick_params('x', labelsize=12)
