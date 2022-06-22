@@ -91,7 +91,7 @@ class MPU6050(Sensor):
     def getVectors(self, active_times: List[tuple]) -> tuple:
         #active times is a list of tuples. First two elements are start and end times, third is 
         length = len(self.time)
-        arr = [0] * length # creating corresponding power array to time intervals, default values 
+        powerarr = [0] * length # creating corresponding power array to time intervals, default values 
         dataarr = [0] * length
         # check if the given start and end time is a valid value in the time array and round to nearest value 
         for times in active_times:
@@ -102,13 +102,13 @@ class MPU6050(Sensor):
                 return -1
             
             for i in range(start_index, end_index):
-                arr[i] = self.getModePower(times[2])
+                powerarr[i] = self.getModePower(times[2])
                 if i == 0:
                     dataarr[i] = self.getBytesPerSecond(times[2])
                 else:
                     dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
             
-        return arr, dataarr
+        return powerarr, dataarr
 
     def getBytesPerSecond(self, mode):
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
