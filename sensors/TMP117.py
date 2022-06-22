@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import random 
 
 class TMP117():
     def __init__(self, time_step, duration, activeTimeParams): 
@@ -113,7 +114,7 @@ class TMP117():
             
         return active_times
     
-    def plotData(power_vector, data_vector, time_vector, active_times):
+    def plotData(self, power_vector, data_vector, time_vector, active_times):
         #basic function to plot power and data vs time. 
         f = plt.figure(figsize=(10,10))
         ax3 = f.add_subplot(311)
@@ -155,6 +156,3 @@ class TMP117():
         data = self.getAllModesData()
         activeTimes = self.getActiveTimes()
         self.plotData(power, data, self.time, activeTimes)
-
-
-        return power, data, self.time
