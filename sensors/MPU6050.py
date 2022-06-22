@@ -8,35 +8,31 @@ from typing import List
 class MPU6050(Sensor):
 
     #DEPRECATED! Thought I would keep around just in case.
-    # def __init__ (self, time_step, duration, sample_rate_divisor=0, mode="accelerometer_only", low_power_wakeup=0, digital_low_pass=0, loop_rate=60):
-    #     #mode tells the type of mode the sensor is in. Choices for accelerometer are "accelerometer_only", "gyroscope_only",
-    #     #"gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP"
+    def __init__ (self, time_step, duration, sample_rate_divisor=0, low_power_wakeup=0, digital_low_pass=0, loop_rate=60):
+        #mode tells the type of mode the sensor is in. Choices for accelerometer are "accelerometer_only", "gyroscope_only",
+        #"gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP"
 
-    #     #time_step would define at what intervals (and therefore time) the model
-    #     # would return data at. A time_step o 1 second would have the model return
-    #     # data at 0,1,2,3... seconds assuming start time of 0 seconds.
-    #     #
-    #     self.mode = mode
-    #     self.time_step = time_step
-    #     self.duration = duration
+        #time_step would define at what intervals (and therefore time) the model
+        # would return data at. A time_step o 1 second would have the model return
+        # data at 0,1,2,3... seconds assuming start time of 0 seconds.
+        #
+        self.time_step = time_step
+        self.duration = duration
 
-    #     self.low_power_wakeup = low_power_wakeup
-    #     #In Hz, determines how fast the sensor wakes up when in low power mode. More wakeups means more power used.
-    #     #Choices are 1.25, 5, 20, 40.
-    #     self.sample_rate_divisor = sample_rate_divisor
-    #     #Value between 0 and 255. Used as a divisor for sample rate equation, higher means slower sample rate meaning
-    #     #presumably lower data collected per second.
-    #     self.digital_low_pass = digital_low_pass
-    #     #Digital low pass filter. Enabling this lowers the sampling rate by a factor of 8. See page 12 of the 
-    #     #register map linked below. 
-    #     self.loop_rate = loop_rate
-    #     #how fast the arduino loop will run. This value is kind of up in the air, but we predict that it may have an
-    #     #affect on how fast we can read from the sensors depending on how much code is run in the loop, in Hz.
-    #     self.time = np.arange(0,self.duration,self.time_step)
+        self.low_power_wakeup = low_power_wakeup
+        #In Hz, determines how fast the sensor wakes up when in low power mode. More wakeups means more power used.
+        #Choices are 1.25, 5, 20, 40.
+        self.sample_rate_divisor = sample_rate_divisor
+        #Value between 0 and 255. Used as a divisor for sample rate equation, higher means slower sample rate meaning
+        #presumably lower data collected per second.
+        self.digital_low_pass = digital_low_pass
+        #Digital low pass filter. Enabling this lowers the sampling rate by a factor of 8. See page 12 of the 
+        #register map linked below. 
+        self.loop_rate = loop_rate
+        #how fast the arduino loop will run. This value is kind of up in the air, but we predict that it may have an
+        #affect on how fast we can read from the sensors depending on how much code is run in the loop, in Hz.
+        self.time = np.arange(0,self.duration,self.time_step)
     
-    def __init__(self, **params):
-        super(MPU6050, self).__init__(**params)
-        #All params configured in parent function!
 
     def runSim(self, active_times: List[tuple]) -> int:
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
@@ -133,7 +129,3 @@ class MPU6050(Sensor):
             return 6*measure_rate
         else:
             return 12*measure_rate
-
-    def getModesArray(self, desription: str) -> List[tuple]:
-        pass
-

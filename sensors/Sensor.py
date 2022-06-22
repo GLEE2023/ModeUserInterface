@@ -5,10 +5,6 @@ import random
 class Sensor:
     #array of all available modes for each sensor. We are planning on using it for error checking
     #in getActiveTimes.
-    allSensorModes = [
-        "OS","CC","accelerometer_only","gyroscope_only","gyroscope_DMP","gyroscope_accelerometer",
-        "gyroscope_accelerometer_DMP"
-    ]
 
     def __init__(self, **config):
         self.__dict__.update(config)
@@ -16,21 +12,6 @@ class Sensor:
         #Initialization of the child sensors would be like this:
         #accelerometer(mode="accelerometer_only", sample_rate_divisor=142, etc=etc)
 
-    # def getPowerUsage(self,power_used,time):
-    #     #Not working!
-    #     power = np.full_like(time, power_used)
-    #     return power #things ready to be plotted
-
-    def getDataAccumulated(self, active_vector, bits_per_second):
-        #in development!
-        data_vector = []
-        tracker = 0
-        for i in active_vector:
-            if i != 0:
-                tracker += bits_per_second
-            data_vector.append(tracker)
-            
-        return data_vector
     
     # def getActiveTimes(self, active_times: List[tuple]) -> List:
     #     #active times is a list of tuples. First two elements are start and end times, third is 
@@ -87,7 +68,3 @@ class Sensor:
         ax2.set_xlabel('Seconds')
 
         plt.show()
-
-    def showParams(self):
-        for k,v in self.__dict__.items():
-            print(k,v)
