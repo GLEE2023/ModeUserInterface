@@ -5,11 +5,13 @@ import random
 from plotAll import generateActiveList
 
 class TMP117():
-    def __init__(self, time_step, duration, activeTimeParams): 
+    def __init__(self, time_step, duration, activeTimeParams, totalTimePeriod, modedict): 
         self.time_step = time_step
         self.duration = duration
         self.time = np.arange(0, duration, time_step) #time at which to collect data
         self.activeTimeParams = activeTimeParams
+        self.totalTimePeriod = totalTimePeriod
+        self.modedict = modedict
         
     def errorCheck(self):
         for times in self.activeTimeParams:
@@ -157,3 +159,6 @@ class TMP117():
         data = self.getAllModesData()
         activeTimes = self.getActiveTimes()
         self.plotData(power, data, self.time, activeTimes)
+        activeList = generateActiveList(self.totalTimePeriod, self.modedict)
+        self.plotData(power, data, self.time, activeList)
+    
