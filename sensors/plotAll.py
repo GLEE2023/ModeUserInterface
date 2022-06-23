@@ -6,9 +6,9 @@ def generateActiveList(total_time: float, modedict:dict, **kwargs) -> list:
     finalArr = []
     curTime = 0
     flag = False
-    while curTime < total_time:
-        for key in modedict:
-            if curTime+modedict[key]>total_time:
+    while curTime < total_time: # creates the final array, updates start time for each mode in each period
+        for key in modedict: 
+            if curTime+modedict[key]>total_time: 
                 flag = True
                 break
             finalArr.append((curTime, curTime+modedict[key], key))
@@ -20,4 +20,7 @@ def generateActiveList(total_time: float, modedict:dict, **kwargs) -> list:
     elif finalArr[-1][1] < total_time:
         finalArr.append((finalArr[-1][1], total_time, finalArr[-1][2]))
     return finalArr
-    #finalArr is a list of tuples in the form (start, stop, mode)
+    #finalArr is a list of tuples in the form (start, stop, mode): [(start,stop, mode), ...]
+    
+
+def plotAll():
