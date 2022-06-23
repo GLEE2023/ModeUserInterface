@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import random 
+from plotAll import generateActiveList
 
 class TMP117():
     def __init__(self, time_step, duration, activeTimeParams): 
