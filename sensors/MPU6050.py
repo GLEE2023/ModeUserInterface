@@ -33,7 +33,7 @@ class MPU6050(Sensor):
         self.time = np.arange(0,self.duration,self.time_step)
     
 
-    def runSim(self, active_times: List[tuple]) -> int:
+    def runSim(self, active_times: List[tuple]) -> tuple:
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
@@ -41,7 +41,7 @@ class MPU6050(Sensor):
         try:
             power, data = self.getVectors(active_times)
             self.plotData(power, data, self.time, active_times)
-            return 1
+            return self.time, power, data
         except TypeError as e:
             print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.", e)
             return -1
