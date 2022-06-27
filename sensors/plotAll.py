@@ -24,4 +24,4 @@ def generateActiveList(total_time: float, modedict:dict, **kwargs) -> list:
     #finalArr is a list of tuples in the form (start, stop, mode): [(start,stop, mode), ...]
 
 def plotAll():
-    
+    pass

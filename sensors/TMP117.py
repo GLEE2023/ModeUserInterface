@@ -165,7 +165,8 @@ class TMP117():
         #self.errorCheck()
         power = self.getAllModesPower()
         data = self.getAllModesData()
-        self.plotData(power, data, self.time, self.activeTimeParams)
+        return power, data, self.time
+        #self.plotData(power, data, self.time, self.activeTimeParams)
 
         # activeList = generateActiveList(self.totalTimePeriod, self.modedict)
         # self.plotData(power, data, self.time, activeList)
