@@ -20,7 +20,7 @@ class CAP11NA(Sensor):
         try:
             power, data = self.getVectors(active_times)
             self.plotData(power, data, self.time, active_times)
-            return 1
+            return self.time, power, data
         except TypeError as e:
             print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.", e)
             return -1
