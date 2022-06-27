@@ -7,7 +7,6 @@ from typing import List
 
 class MPU6050(Sensor):
 
-    #DEPRECATED! Thought I would keep around just in case.
     def __init__ (self, time_step, duration, sample_rate_divisor=0, low_power_wakeup=0, digital_low_pass=0, loop_rate=60):
         #mode tells the type of mode the sensor is in. Choices for accelerometer are "accelerometer_only", "gyroscope_only",
         #"gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP"
