@@ -7,7 +7,6 @@ from typing import List
 
 class MPU6050(Sensor):
 
-    #DEPRECATED! Thought I would keep around just in case.
     def __init__ (self, time_step, duration, sample_rate_divisor=0, low_power_wakeup=0, digital_low_pass=0, loop_rate=60):
         #mode tells the type of mode the sensor is in. Choices for accelerometer are "accelerometer_only", "gyroscope_only",
         #"gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP"
@@ -34,7 +33,7 @@ class MPU6050(Sensor):
         self.time = np.arange(0,self.duration,self.time_step)
     
 
-    def runSim(self, active_times: List[tuple]) -> int:
+    def runSim(self, active_times: List[tuple]) -> tuple:
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
@@ -42,7 +41,7 @@ class MPU6050(Sensor):
         try:
             power, data = self.getVectors(active_times)
             self.plotData(power, data, self.time, active_times)
-            return 1
+            return self.time, power, data
         except TypeError as e:
             print("A type error occurred. Your active times array may exceed the duration set in MPU6050 object.", e)
             return -1
