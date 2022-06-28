@@ -46,7 +46,8 @@ class CAP11NA(Sensor):
                 else:
                     dataarr[i] = dataarr[i-1] + self.getBytesPerSecond()
             
-        return powerarr, dataarr
+        return np.array(powerarr), np.array(dataarr)
+
     
     def getBytesPerSecond(self):
         cap_bytes_per_second = 2

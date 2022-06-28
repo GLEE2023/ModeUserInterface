@@ -107,7 +107,7 @@ class MPU6050(Sensor):
                 else:
                     dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
             
-        return powerarr, dataarr
+        return np.array(powerarr), np.array(dataarr)
 
     def getBytesPerSecond(self, mode):
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
