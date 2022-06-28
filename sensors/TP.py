@@ -76,8 +76,6 @@ class TP(Sensor):
         return powerarr, dataarr
 
     def getBytesPerSecond(self, mode):
-        #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
-        #https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
         measure_rate = 0
         self.getModePower(mode)
         #calculate sample rate.
