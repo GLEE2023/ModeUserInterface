@@ -12,6 +12,12 @@ class BM1422(Sensor):
         average current during measurements: typ-150ua max-300ua
         sample size, rate:
         timing: 10hz, 20hz, 100hz, 1000hz
+
+        foo = BM1422(loop_rate=20, duration=360, time_step=1)
+        #for magnetometer, the certain mode is the timing specification, or standby.
+        modedict = {"1000":10, "standby":10,"10":40}
+        mag_activetimes = generateActiveList(total_time=360, modedict=modedict)
+        foo.runSim(mag_activetimes)
     """
     def __init__(self, duration, time_step, loop_rate, averaging=4, timing=10):
         self.averaging = averaging
