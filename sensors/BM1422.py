@@ -70,7 +70,8 @@ class BM1422(Sensor):
                 else:
                     dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
             
-        return powerarr, dataarr
+        return np.array(powerarr), np.array(dataarr)
+
 
     def getBytesPerSecond(self, timing):
         time_limit = 0
