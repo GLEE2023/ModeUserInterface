@@ -121,9 +121,9 @@ class SM141K():
 
         fig, ax = plt.subplots(figsize=(12,6))
         ax.plot(times, output, color="steelblue")
-        ax.set_title("Solar Power Test", fontsize=20)
-        ax.set_xlabel("Time", fontsize=16)
-        ax.set_ylabel("incidince", fontsize=16)
+        ax.set_title("Power Available", fontsize=20)
+        ax.set_xlabel("Time [hrs]", fontsize=16)
+        ax.set_ylabel("Power [mW]", fontsize=16)
 
         ax.grid(True, alpha=0.25)
 
@@ -136,9 +136,9 @@ class SM141K():
         fig, ax = plt.subplots(figsize=(12,6))
         ax.plot(time, power, color="steelblue")
         ax.fill_between(time, possiblePower, step="pre", alpha=0.4)
-        ax.set_title("Solar Power Test", fontsize=20)
-        ax.set_xlabel("Time", fontsize=16)
-        ax.set_ylabel("incidince", fontsize=16)
+        ax.set_title("Power Available", fontsize=20)
+        ax.set_xlabel("Time [hrs]", fontsize=16)
+        ax.set_ylabel("Power [mW]", fontsize=16)
 
         ax.grid(True, alpha=0.25)
 
