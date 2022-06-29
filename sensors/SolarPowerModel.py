@@ -1,7 +1,7 @@
 # SM141K.py
 # Slightly modified by Luke Roberson from work by James Bohn and John Aldrete
 import numpy as np
-import plotly.graph_objects as go
+#import plotly.graph_objects as go
 from matplotlib import pyplot as plt
 import sys as sys
 
