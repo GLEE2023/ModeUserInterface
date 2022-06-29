@@ -30,7 +30,7 @@ class TP(Sensor):
         try:
             power, data = self.getVectors(active_times)
             self.plotData(power, data, self.time, active_times)
-            return 1
+            return self.time, power, data
         except TypeError as e:
             print("A type error occurred. Your active times array may exceed the duration set in TP object.", e)
             return -1
@@ -66,7 +66,7 @@ class TP(Sensor):
                 print("Error. Index not valid.")
                 return -1
             
-            for i in range(start_index, end_index):
+            for i in range(start_index, length):
                 powerarr[i] = self.getModePower(times[2])
                 if i == 0:
                     dataarr[i] = self.getBytesPerSecond(times[2])

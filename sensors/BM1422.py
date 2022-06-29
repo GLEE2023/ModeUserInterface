@@ -63,7 +63,7 @@ class BM1422(Sensor):
                 print("Error. Index not valid.")
                 return -1
             
-            for i in range(start_index, end_index):
+            for i in range(start_index, length):
                 powerarr[i] = self.getModePower(times[2])
                 if i == 0:
                     dataarr[i] = self.getBytesPerSecond(times[2])
