@@ -58,7 +58,7 @@ class Sensor:
         ax1.set_ylabel('mW')
 
         ax2 = f.add_subplot(313, sharex=ax3)
-        plt.grid(visible=True)
+        plt.tick_params('x', labelsize=12)
         data_plot, = plt.plot(time_vector, data_vector)
         # make these tick labels invisible
         plt.tick_params('x', labelsize=12)
