@@ -64,7 +64,7 @@ class TMP117():
             x = params.split("_")
             mode = x[0]
             averages = x[1]
-            convCycleTime = x[2]
+            convCycleTime = float(x[2])
             if self.loop_rate > convCycleTime:
                 convCycleTime = self.loop_rate
             
@@ -97,14 +97,14 @@ class TMP117():
             #splitting string to get params
             params = times[2]
             x = params.split("_")
-            convCycleTime = x[2]
+            convCycleTime = float(x[2])
             if self.loop_rate > convCycleTime:
                 convCycleTime = self.loop_rate
             
 
             #calculating data per step in active time period
             # convCycle = self.activeTimeParams[times][1]
-            bits_per_second = bits_per_cycle / float(convCycleTime) # bits per second
+            bits_per_second = bits_per_cycle /convCycleTime # bits per second
             activeTimeTotal = times[1]-times[0] # getting num of seconds of active period
             bits_total = bits_per_second * activeTimeTotal # total bits during that active period
             num_steps = end_index-start_index 

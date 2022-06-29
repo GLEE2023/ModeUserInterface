@@ -22,6 +22,3 @@ def generateActiveList(total_time: float, modedict:dict, **kwargs) -> list:
         finalArr.append((finalArr[-1][1], total_time, list(modedict.keys())[mode]))
     return finalArr
     #finalArr is a list of tuples in the form (start, stop, mode): [(start,stop, mode), ...]
-
-def plotAll():
-    pass
