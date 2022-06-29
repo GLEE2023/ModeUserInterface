@@ -1,22 +1,21 @@
 # SM141K.py
 # Slightly modified by Luke Roberson from work by James Bohn and John Aldrete
 import numpy as np
-#import plotly.graph_objects as go
 from matplotlib import pyplot as plt
 import sys as sys
 
 
 class SM141K():
-    def __init__(self, start_time_hrs, duration_hrs, time_step_seconds, latitude, solar_constant=1360, surface_area=.0008772, cell_efficiency=0.25):
+    def __init__(self, start_time_hrs, duration_hrs, time_step_seconds, latitude):
 
         self.start_time         = start_time_hrs
         self.duration           = duration_hrs
         self.end_time           = start_time_hrs+duration_hrs
         self.time_step          = time_step_seconds/3600
         self.latitude           = latitude
-        self.solar_constant     = solar_constant # W/m^2
-        self.surface_area       = surface_area #m^2
-        self.cell_efficiency    = cell_efficiency
+        self.lunar_day_length   = 709 #hrs. Time from solar noon to solar noon on the moon
+        self.lunar_dawn         = self.lunar_day_length/4
+        self.lunar_dusk         = self.lunar_day_length-(self.lunar_day_length/4)
 
 # Assumptions:
     # Solar output is constant - real variance is ~.1% over 11 year cycles
@@ -27,7 +26,8 @@ class SM141K():
 
     # returns power in milliwatts as a function of psi
     def power(self, psi):
-        return np.cos(psi) * self.solar_constant * self.surface_area * self.cell_efficiency * 1000
+
+        return np.cos(psi) * 154
 
     # Analytical Equation for the Dayside Temperature (from Hurley et al, 2015)
     def temp(self, psi):
@@ -42,12 +42,13 @@ class SM141K():
             pass
 
         # Bounds check time
-        if ((time < 6) or (time > 18)):
-            sys.exit('Error. Time should be between dawn (0600) and dusk (1800) for the dayside!')
+
+        if ((time < self.lunar_dawn) or (time > self.lunar_dusk)):
+            sys.exit(f"Error. Time should be between sunrise({self.lunar_dawn} hrs) and sunset({self.lunar_dusk} hrs)  for the dayside!")
         else:
             pass
 
-        time_angle_midnight = ((time/24)*(2*np.pi))%(2*np.pi)
+        time_angle_midnight = ((time/self.lunar_day_length)*(2*np.pi))%(2*np.pi)
         time_angle_noon = np.pi - time_angle_midnight
 
         # Define co-ordinate system
@@ -106,11 +107,12 @@ class SM141K():
 
         for i in range(len(times)):
             time = times[i]
-            time %= 24
-            if time < 6 or time > 18:
+            time %= self.lunar_day_length
+            if time < self.lunar_dawn or time > self.lunar_dusk:
                 continue
 
-            output[i] = self.power(self.psi(latitude, time))
+            angle = self.psi(latitude, time)
+            output[i] = self.power(angle)
 
         return times, output
 
@@ -124,10 +126,30 @@ class SM141K():
         ax.set_ylabel("incidince", fontsize=16)
 
         ax.grid(True, alpha=0.25)
-        plt.show()
 
 
+    def plotPowerAndTimesPossible(self,max_power):
+
+        time,power = self.model()
+        possiblePower = np.where(power>max_power,power,0)
+
+        fig, ax = plt.subplots(figsize=(12,6))
+        ax.plot(time, power, color="steelblue")
+        ax.fill_between(time, possiblePower, step="pre", alpha=0.4)
+        ax.set_title("Solar Power Test", fontsize=20)
+        ax.set_xlabel("Time", fontsize=16)
+        ax.set_ylabel("incidince", fontsize=16)
+
+        ax.grid(True, alpha=0.25)
+
+
+        timePossible = np.where(power>max_power,time,None)
+        timePossible = timePossible[timePossible!=None]
+
+        return [min(timePossible),max(timePossible)]
 
 if __name__ == '__main__':
-    solar_panel_model = SM141K(start_time_hrs=12,duration_hrs=1,time_step_seconds=1,latitude=0)
-    solar_panel_model.plotPowerAvailable()
+    solar_panel_model = SM141K(start_time_hrs=0,duration_hrs=709,time_step_seconds=30,latitude=45)
+
+    print(solar_panel_model.plotPowerAndTimesPossible(40))
+    plt.show()
