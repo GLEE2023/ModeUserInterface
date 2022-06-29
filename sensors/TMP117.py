@@ -11,20 +11,37 @@ class TMP117():
         self.activeTimeParams = activeTimeParams
         self.loop_rate = loop_rate
         
-    # def errorCheck(self):
-    #     for times in self.activeTimeParams:
-    #         averages = [0,8,32,64]
-    #         cycleTimes = [0.0155, 0.125, 0.25, 0.5, 1, 4, 8, 16]
-    #         modes = ["OS", "CC"]
-    #         if self.activeTimeParams[times][0] not in averages:
-    #             print("ERROR: Num averages chosen not valid. You chose {}. Valid params to choose from {}".format(self.activeTimeParams[times][0], averages))
-                
-    #         if self.activeTimeParams[times][1] not in cycleTimes:
-    #             print("ERROR: Conv Cycle time chosen not valid. You chose {}. Valid params to choose from: {}".format(self.activeTimeParams[times][1], cycleTimes))
-             
-    #         if self.activeTimeParams[times][2] not in modes:
-    #             print("ERROR: Mode chosen not valid. You chose {}. Valid params to choose from: {}".format(self.activeTimeParams[times][2], modes))
-                
+    def errorCheck(self):
+        possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
+        possOStimes = ['0.0155', '0.125', '0.5', '1']
+        possAveraging = ['0', '8', '32', '64']
+        possModes = ["OS", "CC"]
+        
+        # checking if time intervals overlap
+        sortedActiveTimes = sorted(self.activeTimeParams, key = lambda x: x[0])
+        for index in range(len(sortedActiveTimes)-1):
+            if sortedActiveTimes[index+1][0] < sortedActiveTimes[index][1]: # interval overlaps
+                print("ERROR: Overlapping intervals {} and {}.".format(sortedActiveTimes[index], sortedActiveTimes[index+1]))
+
+        for params in self.activeTimeParams:
+            start = params[0]
+            end = params[1]
+
+            x = params[2].split("_")
+            mode = x[0]
+            num_averages = x[1]
+            convCycleTime = x[2]
+    
+            if mode not in possModes:
+                print("Invalid Mode of {} in {}. Possible inputs: {}".format(mode, params, possModes))
+            else:
+                if mode == "CC" and convCycleTime not in possCCtimes:
+                    print("Invalid CC conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possCCtimes))
+                if mode == "OS" and convCycleTime not in possOStimes:
+                    print("Invalid OS conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possOStimes))
+                if num_averages not in possAveraging:
+                    print("Invalid Averaging {} in {}. Possible inputs: {}".format(num_averages, params, possAveraging))
+
     def computePower(self, num_averages, convCycleTime, mode):
         activeCurrentConsumption = 135 # micro amps
         activeConversionTime = num_averages*0.0155
@@ -57,9 +74,6 @@ class TMP117():
                 print("Error. Index not valid.")
                 return -1
 
-            # mode = self.activeTimeParams[times][2]
-            # averages = self.activeTimeParams[times][0]
-            # convCycle = self.activeTimeParams[times][1]]
             params = times[2]
             x = params.split("_")
             mode = x[0]
@@ -155,7 +169,7 @@ class TMP117():
         plt.show()
     
     def Simulation(self):
-        #self.errorCheck()
+        self.errorCheck()
         power = self.getAllModesPower()
         data = self.getAllModesData()
         return np.array(power), np.array(data), np.array(self.time)
@@ -163,3 +177,8 @@ class TMP117():
 
         # activeList = generateActiveList(self.totalTimePeriod, self.modedict)
         # self.plotData(power, data, self.time, activeList)
+
+time_step = 0.0155
+activeTimeParams = [(0, 15, "OS_8_0.0155"), (5, 45, "CC_32_16"), (70, 75, "OS_64_1"), (75,100, "OS_8_0.0155")]
+tmp = TMP117(time_step, 100, activeTimeParams, loop_rate = 20) # creating TMP117 class
+tmp.Simulation()
