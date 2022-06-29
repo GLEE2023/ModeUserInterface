@@ -4,11 +4,12 @@ import random
 from plotAll import generateActiveList
 
 class TMP117():
-    def __init__(self, time_step, duration, activeTimeParams): 
+    def __init__(self, time_step, duration, activeTimeParams, loop_rate): 
         self.time_step = time_step
         self.duration = duration
         self.time = np.arange(0, duration, time_step) #time at which to collect data
         self.activeTimeParams = activeTimeParams
+        self.loop_rate = loop_rate
         
     # def errorCheck(self):
     #     for times in self.activeTimeParams:
@@ -64,9 +65,11 @@ class TMP117():
             mode = x[0]
             averages = x[1]
             convCycleTime = x[2]
-
+            if self.loop_rate > convCycleTime:
+                convCycleTime = self.loop_rate
+            
             power = self.computePower(int(averages), float(convCycleTime), mode)
-            for i in range(start_index, end_index):
+            for i in range(start_index, length):
                 power_arr[i] = power
         
         return power_arr
@@ -95,6 +98,9 @@ class TMP117():
             params = times[2]
             x = params.split("_")
             convCycleTime = x[2]
+            if self.loop_rate > convCycleTime:
+                convCycleTime = self.loop_rate
+            
 
             #calculating data per step in active time period
             # convCycle = self.activeTimeParams[times][1]
@@ -111,19 +117,6 @@ class TMP117():
                 data_arr[i] = data_accumulated 
             
         return data_arr
-    
-    # def getActiveTimes(self):
-    #     active_times = []
-    #     for times in self.activeTimeParams: # for each active period
-    #         numaverage = self.activeTimeParams[times][0]
-    #         convCycle = self.activeTimeParams[times][1]
-    #         mode = self.activeTimeParams[times][2]
-            
-    #         string = "Mode:" + str(mode) +  "_ Average:" + str(numaverage) + "_ CycleTime:" + str(convCycle)
-            
-    #         active_times.append((times[0], times[1], string)) # getting start, end, and name of mode
-            
-    #     return active_times
     
     def plotData(self, power_vector, data_vector, time_vector, active_times):
         #basic function to plot power and data vs time. 
