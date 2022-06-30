@@ -96,11 +96,11 @@ class TMP117():
 
         for times in self.activeTimeParams: # check if the given start and end time is a valid value in the time array and round to nearest value 
             start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
-            #end_index = int(times[1] / self.time_step)
+            end_index = int(times[1] / self.time_step)
 
-            # if start_index < 0 or end_index > len(self.time): # not valid time
-            #     print("Error. Index not valid.")
-            #     return -1
+            if start_index < 0 or end_index > len(self.time): # not valid time
+                print("Error. Index not valid.")
+                return -1
             params = times[2]
             x = params.split("_")
             mode = x[0]
@@ -110,9 +110,9 @@ class TMP117():
                 convCycleTime = self.loop_rate
             
             power = self.computePower(int(averages), float(convCycleTime), mode)
-            for i in range(start_index, length):
+            for i in range(start_index, end_index):
                 power_arr[i] = power
-        
+
         return power_arr
             
     def getAllModesData(self):
