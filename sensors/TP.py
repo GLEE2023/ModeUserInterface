@@ -21,9 +21,10 @@ class TP(Sensor):
     
 
     def runSim(self, active_times: List[tuple]) -> int:
-        #active_times would be a list of tuples/list that would define the time at which the sensor was running
-        # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
-        # 4s to 5s, 6s to 7s
+        # This function takes in the active times and ensures the power and data vectors to be graphed with the active times
+        # Args: Active times - A list of tuples that would define the time at which the sensor was running
+        # Returns: The vectors for the power usage, data usage and plots this data with respect to the active times
+
         self.time = np.arange(0,self.duration,self.time_step) #time at which to collect data
         try:
             power, data = self.getVectors(active_times)
@@ -34,7 +35,11 @@ class TP(Sensor):
             return -1
 
     def getModePower(self, mode):
-        #Calculates power when sensor is active. This value is used in conjunction with
+        # This function calculates power when sensor is active. This value is used in conjunction with
+
+
+
+
         self.mode = mode
         power_used = 0
         TP_power_microamps = 0
@@ -60,9 +65,14 @@ class TP(Sensor):
         for times in active_times:
             start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
             end_index = int(times[1] / self.time_step)
-            if start_index < 0 or end_index > len(self.time): 
-                print("Error. Index not valid.")
+            if (start_index < 0): 
+                print("Error. Starting index not valid.")
                 return -1
+            elif(end_index > len(self.time)):
+                end_index = len(self.time)
+                print("Warning. Active times is longer than the duration")
+            else:
+                print("Successful")
             
             for i in range(start_index, length):
                 powerarr[i] = self.getModePower(times[2])
@@ -85,4 +95,4 @@ class TP(Sensor):
         if(mode == "TP_only"):
             return 6*measure_rate
         else:
-            return 12*measure_rate
+            return 0*measure_rate
