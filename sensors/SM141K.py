@@ -3,11 +3,13 @@
 """Class used to simulate the power produced by a SM141K solar panel
 
     Slightly modified by Luke Roberson from work by James Bohn and John Aldrete.
+    If this class is being used outside of a jupyter notebook, plt.show() is
+    needed at the end of the script in order to show plots
 
     Usage Example:
     solar_panel_model = SM141K(start_time_hrs=0, duration_hrs=709, time_step_seconds=30, latitude=45)
     solar_panel_model.plotPowerAvailable() #plots power produced throughout a lunar day
-    plt.show()
+    plt.show() #needed if outside of jupyter notebook
 """
 import numpy as np
 from matplotlib import pyplot as plt
