@@ -8,8 +8,7 @@ class TP(Sensor):
 
     def __init__ (self, time_step, duration, loop_rate=60):
         #mode tells the type of mode the sensor is in. Choices for TP are "TP_only"
-        #time_step would define at what intervals (and therefore time) the model
-        # would return data at. A time_step o 1 second would have the model return
+        #time_step would define at what intervals (and therefore time) the model will be running
         # data at 0,1,2,3... seconds assuming start time of 0 seconds.
 
         self.time_step = time_step
