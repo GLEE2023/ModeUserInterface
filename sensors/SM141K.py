@@ -1,5 +1,14 @@
-# SM141K.py
-# Slightly modified by Luke Roberson from work by James Bohn and John Aldrete
+"""Class used to simulate the power produced by a SM141K solar panel
+
+    Slightly modified by Luke Roberson from work by James Bohn and John Aldrete.
+    If this class is being used outside of a jupyter notebook, plt.show() is
+    needed at the end of the script in order to show plots
+
+    Usage Example:
+    solar_panel_model = SM141K(start_time_hrs=0, duration_hrs=709, time_step_seconds=30, latitude=45)
+    solar_panel_model.plotPowerAvailable() #plots power produced throughout a lunar day
+    plt.show() #needed if outside of jupyter notebook
+"""
 import numpy as np
 from matplotlib import pyplot as plt
 import sys as sys
@@ -17,7 +26,7 @@ class SM141K():
         self.lunar_dawn         = self.lunar_day_length/4
         self.lunar_dusk         = self.lunar_day_length-(self.lunar_day_length/4)
 
-# Assumptions:
+    # Assumptions:
     # Solar output is constant - real variance is ~.1% over 11 year cycles
     # Variance in moons distance to sun is negligable (constant 1 AU) - real daily variance is ~.5%, yearly ~3.5%
     # Solar panel power efficiency is not dependent on angle of incidence - not mentioned in datasheet
@@ -25,16 +34,42 @@ class SM141K():
     # No irradiance on the dark side - if there was any it would be EXTREMELY small
 
     # returns power in milliwatts as a function of psi
-    def power(self, psi):
+    def power(self, psi:float ) -> float:
+        """
+        Returns power producced by solar panel
 
-        return np.cos(psi) * 154
+        args:
+            psi (float): angle [rad] of incidience of solar panel to Sun
+        returns:
+            power (float): power in milliwatts of power produced by solar panelS
+        """
+        power = np.cos(psi) * 154
+        return power
 
     # Analytical Equation for the Dayside Temperature (from Hurley et al, 2015)
-    def temp(self, psi):
-        return (262*(np.sqrt(np.cos(psi)))) + 130
+    def temp(self, psi: float) -> float:
+        """
+        returns temp of lunar surface given incidence angle
+
+        args:
+            psi (float): incidence angle with respect to sun
+        returns:
+            temp (float): temp in Kelvin of lunar surface
+        """
+        temp = (262*(np.sqrt(np.cos(psi)))) + 130
+        return
 
     def psi(self, lat, time):
+        """
+        Returns the angle of the lunar surface . Solar
+        panel facing directly toward the sun corresponds to psi = 0 rad
 
+        args:
+            lat (float): latitude [degrees] on Lunar surface from (-90,90)
+            time (float): time [hrs] since Lunar midnight
+        returns:
+            psi (float): angle [rad] of Lunar surface with respect to sun.
+        """
         # Bounds check latitude
         if (abs(lat)>90):
             sys.exit('Error. Latitude should be less than 90 degrees!')
@@ -97,13 +132,30 @@ class SM141K():
         return psi
 
     def model(self, start_time=None, end_time=None, time_step=None, latitude=None):
+        """
+        run a simulation of the solar panel power production starting at
+        start_time and going until end_time. Times are specified in hours since
+        lunar midnight. If paramters are not specified, class variable times are
+        used (specified during initialization).
+
+        args:
+            start_time (float): hours since lunar midnight of start time of model
+            end_time (float): hours of end time
+            time_step (float): seconds between simulation points
+            latitude (float): latitude on Lunar surface in degrees from (-90,90)
+        returns:
+            times (list[float]): vector of times at which simulation was ran
+            powers (list[float]): vector of power produced corresponding to time
+                in times
+        """
+
         if start_time==None: start_time = self.start_time
         if end_time==None: end_time = self.end_time
         if time_step==None: time_step = self.time_step
         if latitude==None: latitude = self.latitude
 
         times = np.arange(start_time, end_time, time_step)
-        output = np.zeros(len(times))
+        powers = np.zeros(len(times))
 
         for i in range(len(times)):
             time = times[i]
@@ -112,11 +164,19 @@ class SM141K():
                 continue
 
             angle = self.psi(latitude, time)
-            output[i] = self.power(angle)
+            powers[i] = self.power(angle)
 
-        return times, output
+        return times, powers
 
     def plotPowerAvailable(self):
+        """
+        runs model and plots it according to times specified in __init__
+
+        args:
+            None
+        returns:
+            None
+        """
         times,output = self.model()
 
         fig, ax = plt.subplots(figsize=(12,6))
@@ -129,6 +189,15 @@ class SM141K():
 
 
     def plotPowerAndTimesPossible(self,max_power):
+        """
+        Plots power available and times at which the solar panel produces power
+        specified by max_power or greater
+
+        args:
+            max_power (float): max power consumed
+        returns:
+            None
+        """
 
         time,power = self.model()
         possiblePower = np.where(power>max_power,power,0)
@@ -150,6 +219,8 @@ class SM141K():
 
 if __name__ == '__main__':
     solar_panel_model = SM141K(start_time_hrs=0,duration_hrs=709,time_step_seconds=30,latitude=45)
+
+    print("psi at noon, lat=0", solar_panel_model.psi(lat=0,time=350))
 
     print(solar_panel_model.plotPowerAndTimesPossible(40))
     plt.show()

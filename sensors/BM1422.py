@@ -27,6 +27,18 @@ class BM1422(Sensor):
         self.loop_rate = loop_rate
 
     def runSim(self, active_times: List[tuple]) -> int:
+        """
+            This function will call the errorCheck(), getAllModesPower(), getAllModesData() functions. It first checks if the params
+            for this sensor are valid and then calls the functions to get the power and data info.
+
+            Args: none
+
+            Returns: 
+                power (numpy array)
+                data (numpy array)
+                time (numpy array)
+        """ 
+        
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
