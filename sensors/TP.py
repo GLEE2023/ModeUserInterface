@@ -35,10 +35,9 @@ class TP(Sensor):
             return -1
 
     def getModePower(self, mode):
-        # This function calculates power when sensor is active. This value is used in conjunction with
-
-
-
+        # This function calculates power when sensor is active
+        # Args: We pass in the mode we want the sensor to run at
+        # Returns: A vector of when power is used. Units are in mW.
 
         self.mode = mode
         power_used = 0
@@ -54,10 +53,12 @@ class TP(Sensor):
             print("Invalid mode entered.")
             return -1
         return power_used
-        #returns a vector of when power is used. Units are in mW.
 
     def getVectors(self, active_times: List[tuple]) -> tuple:
-        #active times is a list of tuples. First two elements are start and end times, third is 
+        # This function returns the power vector and the data vectors to send to runSim so it can be graphed
+        # Args: active times as a list of tuples. First two elements are start and end times
+        # Returns: The power array and the data array
+
         length = len(self.time)
         powerarr = [0] * length # creating corresponding power array to time intervals, default values 
         dataarr = [0] * length
@@ -84,14 +85,16 @@ class TP(Sensor):
         return powerarr, dataarr
 
     def getBytesPerSecond(self, mode):
+        # This function calculates the data being collected and how much
+        # Args: The mode the sensor is running on
+        # Result: We are returning the measure rate and how much data is being collected in Bytes
+
         measure_rate = 0
         self.getModePower(mode)
         #calculate sample rate.
         sample_rate = 0.64 #how fast measurements are written to
         #TP measurement registers, in Hz.
-
         measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
-        
         if(mode == "TP_only"):
             return 6*measure_rate
         else:
