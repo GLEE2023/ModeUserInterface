@@ -8,11 +8,9 @@ class TP(Sensor):
 
     def __init__ (self, time_step, duration, loop_rate=60):
         #mode tells the type of mode the sensor is in. Choices for TP are "TP_only"
-
-        #time_step would define at what intervals (and therefore time) the model
-        # would return data at. A time_step o 1 second would have the model return
+        #time_step would define at what intervals (and therefore time) the model will be running
         # data at 0,1,2,3... seconds assuming start time of 0 seconds.
-        #
+
         self.time_step = time_step
         self.duration = duration
 
@@ -39,17 +37,17 @@ class TP(Sensor):
         #Calculates power when sensor is active. This value is used in conjunction with
         self.mode = mode
         power_used = 0
-        if(mode == "TP_only"):
-            TP_only_power_microamps = 15
-        else:
-            TP_only_power_microamps = 15
+        TP_power_microamps = 0
         voltage = 3.3
         if(mode == "TP_only"):
-            power_used = (TP_only_power_microamps * voltage) / 1000 #converted to milliamps.
+            TP_power_microamps = 15
+            power_used = (TP_power_microamps * voltage) / 1000 #converted to milliamps.
+        elif(mode == "TP_off"):
+            TP_power_microamps = 0
+            power_used = (TP_power_microamps * voltage) / 1000 #converted to milliamps.
         else:
             print("Invalid mode entered.")
             return -1
-        
         return power_used
         #returns a vector of when power is used. Units are in mW.
 
@@ -80,7 +78,7 @@ class TP(Sensor):
         self.getModePower(mode)
         #calculate sample rate.
         sample_rate = 0.64 #how fast measurements are written to
-        #accelerometer measurement registers, in Hz.
+        #TP measurement registers, in Hz.
 
         measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
         
