@@ -7,7 +7,7 @@ from typing import List
 class TP(Sensor):
 
     def __init__ (self, time_step, duration, loop_rate=60):
-        #mode tells the type of mode the sensor is in. Choices for TP are "TP_only"
+        #mode tells the type of mode the sensor is in. Choices for TP are "TP_only" and "TP_off"
 
         #time_step would define at what intervals (and therefore time) the model
         # would return data at. A time_step o 1 second would have the model return
@@ -41,14 +41,19 @@ class TP(Sensor):
         power_used = 0
         if(mode == "TP_only"):
             TP_only_power_microamps = 15
-        else:
-            TP_only_power_microamps = 15
-        voltage = 3.3
-        if(mode == "TP_only"):
-            power_used = (TP_only_power_microamps * voltage) / 1000 #converted to milliamps.
+        elif(mode == "TP_off"):
+            TP_off_power_microamps = 0 
         else:
             print("Invalid mode entered.")
             return -1
+        voltage = 3.3
+        if(mode == "TP_only"):
+            power_used = (TP_only_power_microamps * voltage) / 1000 #converted to milliamps.
+        elif(mode == "TP_off"):
+            power_used = (TP_off_power_microamps * voltage) / 1000 #converted to milliamps.
+        else:
+           print("Invalid mode entered.")
+           return -1
         
         return power_used
         #returns a vector of when power is used. Units are in mW.
@@ -86,5 +91,5 @@ class TP(Sensor):
         
         if(mode == "TP_only"):
             return 6*measure_rate
-        else:
-            return 12*measure_rate
+        elif(mode == "TP_off"):
+            return 0
