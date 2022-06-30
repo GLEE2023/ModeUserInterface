@@ -1,5 +1,3 @@
-# SM141K.py
-#
 """Class used to simulate the power produced by a SM141K solar panel
 
     Slightly modified by Luke Roberson from work by James Bohn and John Aldrete.
