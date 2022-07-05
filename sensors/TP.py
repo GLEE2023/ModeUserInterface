@@ -8,11 +8,9 @@ class TP(Sensor):
 
     def __init__ (self, time_step, duration, loop_rate=60):
         #mode tells the type of mode the sensor is in. Choices for TP are "TP_only"
-
-        #time_step would define at what intervals (and therefore time) the model
-        # would return data at. A time_step o 1 second would have the model return
+        #time_step would define at what intervals (and therefore time) the model will be running
         # data at 0,1,2,3... seconds assuming start time of 0 seconds.
-        #
+
         self.time_step = time_step
         self.duration = duration
 
@@ -23,9 +21,10 @@ class TP(Sensor):
     
 
     def runSim(self, active_times: List[tuple]) -> int:
-        #active_times would be a list of tuples/list that would define the time at which the sensor was running
-        # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
-        # 4s to 5s, 6s to 7s
+        # This function takes in the active times and ensures the power and data vectors to be graphed with the active times
+        # Args: Active times - A list of tuples that would define the time at which the sensor was running
+        # Returns: The vectors for the power usage, data usage and plots this data with respect to the active times
+
         self.time = np.arange(0,self.duration,self.time_step) #time at which to collect data
         try:
             power, data = self.getVectors(active_times)
@@ -36,25 +35,30 @@ class TP(Sensor):
             return -1
 
     def getModePower(self, mode):
-        #Calculates power when sensor is active. This value is used in conjunction with
+        # This function calculates power when sensor is active
+        # Args: We pass in the mode we want the sensor to run at
+        # Returns: A vector of when power is used. Units are in mW.
+
         self.mode = mode
         power_used = 0
-        if(mode == "TP_only"):
-            TP_only_power_microamps = 15
-        else:
-            TP_only_power_microamps = 15
+        TP_power_microamps = 0
         voltage = 3.3
         if(mode == "TP_only"):
-            power_used = (TP_only_power_microamps * voltage) / 1000 #converted to milliamps.
+            TP_power_microamps = 15
+            power_used = (TP_power_microamps * voltage) / 1000 #converted to milliamps.
+        elif(mode == "TP_off"):
+            TP_power_microamps = 0
+            power_used = (TP_power_microamps * voltage) / 1000 #converted to milliamps.
         else:
             print("Invalid mode entered.")
             return -1
-        
         return power_used
-        #returns a vector of when power is used. Units are in mW.
 
     def getVectors(self, active_times: List[tuple]) -> tuple:
-        #active times is a list of tuples. First two elements are start and end times, third is 
+        # This function returns the power vector and the data vectors to send to runSim so it can be graphed
+        # Args: active times as a list of tuples. First two elements are start and end times
+        # Returns: The power array and the data array
+
         length = len(self.time)
         powerarr = [0] * length # creating corresponding power array to time intervals, default values 
         dataarr = [0] * length
@@ -62,9 +66,14 @@ class TP(Sensor):
         for times in active_times:
             start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
             end_index = int(times[1] / self.time_step)
-            if start_index < 0 or end_index > len(self.time): 
-                print("Error. Index not valid.")
+            if (start_index < 0): 
+                print("Error. Starting index not valid.")
                 return -1
+            elif(end_index > len(self.time)):
+                end_index = len(self.time)
+                print("Warning. Active times is longer than the duration")
+            else:
+                print("Successful")
             
             for i in range(start_index, length):
                 powerarr[i] = self.getModePower(times[2])
@@ -76,15 +85,17 @@ class TP(Sensor):
         return powerarr, dataarr
 
     def getBytesPerSecond(self, mode):
+        # This function calculates the data being collected and how much
+        # Args: The mode the sensor is running on
+        # Result: We are returning the measure rate and how much data is being collected in Bytes
+
         measure_rate = 0
         self.getModePower(mode)
         #calculate sample rate.
         sample_rate = 0.64 #how fast measurements are written to
-        #accelerometer measurement registers, in Hz.
-
+        #TP measurement registers, in Hz.
         measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
-        
         if(mode == "TP_only"):
             return 6*measure_rate
         else:
-            return 12*measure_rate
+            return 0*measure_rate
