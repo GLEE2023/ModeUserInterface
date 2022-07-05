@@ -119,7 +119,7 @@ class TMP117():
         """
             This function computes an array that contains the data at every index corresponding to active times.
             Since a 16-bit value is stored at the end of each conversion cycle, this data is accumulated over the active time 
-            and then stored during the non-active time in this model. 
+            and then stored during the non-active time in this model. This function only computes the average data- it calculates the data per step in each active time period.
 
             Args: none
 
@@ -194,7 +194,7 @@ class TMP117():
         plt.tick_params('x', labelbottom=False)
         #power_value_limit = [0,0.1]
         #ax1.set_ylim(power_value_limit)
-        ax1.set_ylabel('mW')
+        ax1.set_ylabel('Average Power (mW)')
 
         ax2 = f.add_subplot(313, sharex=ax3)
         data_plot, = plt.plot(time_vector, data_vector)
@@ -202,7 +202,7 @@ class TMP117():
         plt.tick_params('x', labelsize=12)
         #data_value_limit = [0,500]
         #ax2.set_ylim(data_value_limit)
-        ax2.set_ylabel('Bytes')
+        ax2.set_ylabel('Average Data (Bytes)')
         ax2.set_xlabel('Seconds')
 
         plt.show()
