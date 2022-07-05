@@ -72,8 +72,7 @@ class TP(Sensor):
             elif(end_index > len(self.time)):
                 end_index = len(self.time)
                 print("Warning. Active times is longer than the duration")
-            else:
-                print("Successful")
+            
             
             for i in range(start_index, length):
                 powerarr[i] = self.getModePower(times[2])
