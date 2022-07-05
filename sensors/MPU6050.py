@@ -31,8 +31,7 @@ class MPU6050(Sensor):
         #how fast the arduino loop will run. This value is kind of up in the air, but we predict that it may have an
         #affect on how fast we can read from the sensors depending on how much code is run in the loop, in Hz.
         self.time = np.arange(0,self.duration,self.time_step)
-    
-
+        
     def runSim(self, active_times: List[tuple]) -> tuple:
         """
         Returns time, power, data vectors and plot.
@@ -67,6 +66,7 @@ class MPU6050(Sensor):
         returns:
             power_used, unit is mW.
         """
+        possInputs = ["low_power_wakeup_1.25", "low_power_wakeup_5", "low_power_wakeup_20", "low_power_wakeup_40", "low_power_wakeup", "accelerometer_only", "gyroscope_only", "gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP", ]
 
         self.mode = mode
         power_used = 0
@@ -100,7 +100,7 @@ class MPU6050(Sensor):
         elif(mode == "gyroscope_accelerometer_DMP"):
             power_used = gyroscope_accelerometer_DMP_power_milliamps * voltage
         else:
-            print("Invalid mode entered.")
+            print("Invalid mode {} entered. Please choose from the possible inputs: {}".format(mode, possInputs))
             return -1
         
         return power_used
@@ -116,6 +116,7 @@ class MPU6050(Sensor):
         returns:
             power_arr, data_arr both numpy arrays representing power and data over time.
         """
+
         length = len(self.time)
         powerarr = [0] * length # creating corresponding power array to time intervals, default values 
         dataarr = [0] * length
