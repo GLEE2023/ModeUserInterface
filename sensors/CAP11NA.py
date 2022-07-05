@@ -13,6 +13,15 @@ class CAP11NA(Sensor):
         self.time = np.arange(0,self.duration,self.time_step)
 
     def runSim(self, active_times: List[tuple]) -> int:
+        """
+        Returns time, power, data vectors and plot.
+
+        args:
+            active_times (list): list of active time tuples in the form of 
+            [(int(start1), int(end1), "mode1"), (int(start2), int(end2), "mode2")]
+        returns:
+            self.time, power, data. all vectors used in plotting
+        """
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
@@ -26,7 +35,15 @@ class CAP11NA(Sensor):
             return -1
     
     def getVectors(self, active_times: List[tuple]) -> tuple:
-        #active times is a list of tuples. First two elements are start and end times, third is 
+        """
+        Returns time and data vectors used in plotting.
+
+        args:
+            active_times(list): list of active times tuples in the form
+            [(int(start1), int(end1), "mode1"), (int(start2), int(end2), "mode2")].
+        returns:
+            power_arr, data_arr both numpy arrays representing power and data over time.
+        """
         length = len(self.time)
         cap_estimated_power_usage = 1 #in mW
         powerarr = [0] * length # creating corresponding power array to time intervals, default values 
@@ -50,6 +67,14 @@ class CAP11NA(Sensor):
 
     
     def getBytesPerSecond(self):
+        """
+        Returns number of bytes per second based on loop rate.
+
+        args:
+            None
+        returns:
+            An integer representation of bytes per second.
+        """
         cap_bytes_per_second = 2
         return self.loop_rate * cap_bytes_per_second
 
