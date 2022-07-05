@@ -25,7 +25,8 @@ class TMP117():
         possOStimes = ['0.0155', '0.125', '0.5', '1']
         possAveraging = ['0', '8', '32', '64']
         possModes = ["OS", "CC"]
-        
+
+
         # checking if time intervals overlap
         sortedActiveTimes = sorted(self.activeTimeParams, key = lambda x: x[0])
         for index in range(len(sortedActiveTimes)-1):
