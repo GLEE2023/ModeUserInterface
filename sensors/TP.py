@@ -42,20 +42,12 @@ class TP(Sensor):
             return -1
 
     def getModePower(self, mode):
-<<<<<<< HEAD
-        # This function calculates power when sensor is active
-        # Args: We pass in the mode we want the sensor to run at
-        # Returns: A vector of when power is used. Units are in mW.
-
-        #self.mode = mode
-=======
         """
         This function calculates power when sensor is active
         Args: We pass in the mode we want the sensor to run at
         Returns: A vector of when power is used. Units are in mW.
         """
         self.mode = mode
->>>>>>> 2c98651972a5d7f38f29d42c493e743158662e97
         power_used = 0
         TP_power_microamps = 0
         voltage = 3.3

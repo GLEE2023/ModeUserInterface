@@ -33,20 +33,15 @@ class TMP117():
             if sortedActiveTimes[index+1][0] < sortedActiveTimes[index][1]: # interval overlaps
                 print("ERROR: Overlapping intervals {} and {}.".format(sortedActiveTimes[index], sortedActiveTimes[index+1]))
 
-        
-
         for params in self.activeTimeParams:
-            start = params[0]
-            end = params[1]
-            mode = params[2]
-    
+            x = params[2].split("_")
+            mode = x[0]
+            num_averages = x[1]
+            convCycleTime = x[2]
+
             if mode not in possModes:
                 print("Invalid Mode of {} in {}. Possible inputs: {}".format(mode, params, possModes))
-            elif mode != "OFF":
-                x = params[2].split("_")
-                mode = x[0]
-                num_averages = x[1]
-                convCycleTime = x[2]
+            else:
                 if mode == "CC" and convCycleTime not in possCCtimes:
                     print("Invalid CC conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possCCtimes))
                 if mode == "OS" and convCycleTime not in possOStimes:
@@ -54,6 +49,7 @@ class TMP117():
                 if num_averages not in possAveraging:
                     print("Invalid Averaging {} in {}. Possible inputs: {}".format(num_averages, params, possAveraging))
 
+            
     def computePower(self, num_averages, convCycleTime, mode):
         """
             This function will compute the average power for CC and OS mode in TMP117. It will return a floating point number.
@@ -74,13 +70,16 @@ class TMP117():
         standbyTime = convCycleTime - activeConversionTime
         
         SDcurrent = 250/ 1000000 # micro amps
-        
+        current = 0
         if mode == "CC":
             current = ((activeCurrentConsumption*activeConversionTime)+(standByCurrentConsumption*standbyTime))/convCycleTime
 
         elif mode == "OS":
             current = ((activeCurrentConsumption*activeConversionTime)+(SDcurrent*standbyTime))/convCycleTime
-            
+        
+        elif mode == "OFF":
+            current = 0
+
         power = (current * 3.3)/1000 # milli watts
         
         return power
