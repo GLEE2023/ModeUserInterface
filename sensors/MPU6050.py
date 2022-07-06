@@ -31,9 +31,18 @@ class MPU6050(Sensor):
         #how fast the arduino loop will run. This value is kind of up in the air, but we predict that it may have an
         #affect on how fast we can read from the sensors depending on how much code is run in the loop, in Hz.
         self.time = np.arange(0,self.duration,self.time_step)
-    
-
+        
     def runSim(self, active_times: List[tuple]) -> tuple:
+        """
+        Returns time, power, data vectors and plot.
+
+        args:
+            active_times (list): list of active time tuples in the form of 
+            [(int(start1), int(end1), "mode1"), (int(start2), int(end2), "mode2")]
+        returns:
+            self.time, power, data. all vectors used in plotting
+        """
+        
         #active_times would be a list of tuples/list that would define the time at which the sensor was running
         # i.e. [[0,1],[4,5],[6,7]] would have the sensor running from time 0s to 1s,
         # 4s to 5s, 6s to 7s
@@ -47,7 +56,17 @@ class MPU6050(Sensor):
             return -1
 
     def getModePower(self, mode):
-        #Calculates power when sensor is active. This value is used in conjunction with
+        """
+        Returns power used while in a given mode.
+
+        args:
+            mode (string): Choices are "accelerometer_only", "gyroscope_only",
+            "gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP", and "low_power_wakeup_1.25" to
+            ,"low_power_wakeup_5","low_power_wakeup_20","low_power_wakeup_40"
+        returns:
+            power_used, unit is mW.
+        """
+        possInputs = ["low_power_wakeup_1.25", "low_power_wakeup_5", "low_power_wakeup_20", "low_power_wakeup_40", "low_power_wakeup", "accelerometer_only", "gyroscope_only", "gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP", ]
 
         self.mode = mode
         power_used = 0
@@ -81,14 +100,23 @@ class MPU6050(Sensor):
         elif(mode == "gyroscope_accelerometer_DMP"):
             power_used = gyroscope_accelerometer_DMP_power_milliamps * voltage
         else:
-            print("Invalid mode entered.")
+            print("Invalid mode {} entered. Please choose from the possible inputs: {}".format(mode, possInputs))
             return -1
         
         return power_used
         #returns a vector of when power is used. Units are in mW.
 
     def getVectors(self, active_times: List[tuple]) -> tuple:
-        #active times is a list of tuples. First two elements are start and end times, third is 
+        """
+        Returns time and data vectors used in plotting.
+
+        args:
+            active_times(list): list of active times tuples in the form
+            [(int(start1), int(end1), "mode1"), (int(start2), int(end2), "mode2")].
+        returns:
+            power_arr, data_arr both numpy arrays representing power and data over time.
+        """
+
         length = len(self.time)
         powerarr = [0] * length # creating corresponding power array to time intervals, default values 
         dataarr = [0] * length
@@ -110,6 +138,16 @@ class MPU6050(Sensor):
         return np.array(powerarr), np.array(dataarr)
 
     def getBytesPerSecond(self, mode):
+        """
+        Returns number of bytes per second a mode produces.
+
+        args:
+            mode (string): Choices are "accelerometer_only", "gyroscope_only",
+            "gyroscope_DMP", "gyroscope_accelerometer", "gyroscope_accelerometer_DMP", and "low_power_wakeup_1.25" to
+            ,"low_power_wakeup_5","low_power_wakeup_20","low_power_wakeup_40"
+        returns:
+            An integer representation of bytes per second given a mode.
+        """
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
         #https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
         measure_rate = 0
