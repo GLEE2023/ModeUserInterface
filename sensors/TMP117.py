@@ -24,7 +24,7 @@ class TMP117():
         possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
         possOStimes = ['0.0155', '0.125', '0.5', '1']
         possAveraging = ['0', '8', '32', '64']
-        possModes = ["OS", "CC"]
+        possModes = ["OS", "CC", "OFF"]
 
 
         # checking if time intervals overlap
@@ -33,18 +33,20 @@ class TMP117():
             if sortedActiveTimes[index+1][0] < sortedActiveTimes[index][1]: # interval overlaps
                 print("ERROR: Overlapping intervals {} and {}.".format(sortedActiveTimes[index], sortedActiveTimes[index+1]))
 
+        
+
         for params in self.activeTimeParams:
             start = params[0]
             end = params[1]
-
-            x = params[2].split("_")
-            mode = x[0]
-            num_averages = x[1]
-            convCycleTime = x[2]
+            mode = params[2]
     
             if mode not in possModes:
                 print("Invalid Mode of {} in {}. Possible inputs: {}".format(mode, params, possModes))
-            else:
+            elif mode != "OFF":
+                x = params[2].split("_")
+                mode = x[0]
+                num_averages = x[1]
+                convCycleTime = x[2]
                 if mode == "CC" and convCycleTime not in possCCtimes:
                     print("Invalid CC conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possCCtimes))
                 if mode == "OS" and convCycleTime not in possOStimes:

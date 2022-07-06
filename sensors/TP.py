@@ -39,7 +39,7 @@ class TP(Sensor):
         # Args: We pass in the mode we want the sensor to run at
         # Returns: A vector of when power is used. Units are in mW.
 
-        self.mode = mode
+        #self.mode = mode
         power_used = 0
         TP_power_microamps = 0
         voltage = 3.3
@@ -50,7 +50,7 @@ class TP(Sensor):
             TP_power_microamps = 0
             power_used = (TP_power_microamps * voltage) / 1000 #converted to milliamps.
         else:
-            print("Invalid mode entered.")
+            print("Invalid mode {} entered.".format(mode, ))
             return -1
         return power_used
 
