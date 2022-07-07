@@ -73,11 +73,11 @@ def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, powe
     plt.plot(mag_time, mag_data, label = "Magnetometer Sensor")
     plt.plot(cap_time, cap_data, label = "Capacitive Sensor")
     plt.plot(tp_time, tp_data, label = "Thermopile Sensor")
-
     plt.plot(mag_time, total_data, label = "total data")
 
     plt.grid(visible=True)
     plt.xlabel("Time",fontsize=16)
     plt.ylabel("Data",fontsize=16)
     plt.title("Data vs Time All Sensors",fontsize=16)
-    plt.legend();    
+    plt.legend()
+    plt.show();    
