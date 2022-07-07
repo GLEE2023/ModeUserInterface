@@ -47,7 +47,7 @@ def generateActiveList(total_time: float, modedict:dict) -> list:
     return finalArr
     #finalArr is a list of tuples in the form (start, stop, mode): [(start,stop, mode), ...]
 
-def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, power_tmp, power_acc, mag_power, cap_power, data_tmp, data_acc, mag_data, cap_data, tp_data, total_pow, total_data): 
+def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, power_tmp, power_acc, mag_power, cap_power, data_tmp, data_acc, mag_data, cap_data, tp_data, total_pow, total_data, chip_pow): 
     plt.figure(figsize=(15, 7))
 
     plt.plot(time_tmp, power_tmp, label = "Power Temp Sensor")
@@ -55,7 +55,8 @@ def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, powe
     plt.plot(mag_time, mag_power, label = "Magnetometer Sensor")
     plt.plot(cap_time, cap_power, label = "Capacitive Sensor")
     plt.plot(tp_time, tp_power, label = "Thermopile Sensor")
-
+    #atmega power
+    plt.plot([0,mag_time[-1]],[chip_pow,chip_pow], label = "ATMega328P")
 
     plt.plot(mag_time, total_pow, label = "total pow")
 
@@ -79,5 +80,4 @@ def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, powe
     plt.xlabel("Time",fontsize=16)
     plt.ylabel("Data",fontsize=16)
     plt.title("Data vs Time All Sensors",fontsize=16)
-    plt.legend()
-    plt.show();    
+    plt.legend();
