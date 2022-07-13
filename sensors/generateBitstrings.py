@@ -3,41 +3,41 @@ from re import L
 import numpy as np
 
 def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 different configurations
-    possCCtimes = {'0.0155': 0b000, '0.125': 0b001, '0.25': 0b010, '0.5': 0b011, '1': 0b100, '4': 0b101, '8': 0b110, '16': 0b111}
-    possOStimes = {'0.0155': 0b000, '0.125': 0b001, '0.5': 0b011, '1': 0b100}
-    possAveraging = {'0': 0b00, '8': 0b01, '32': 0b10, '64': 0b11}
-    possModes = {"OS": 0b0, "CC": 0b1 }
+    possCCtimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
+    possOStimes = {'0.0155': "000", '0.125': "001", '0.5': "011", '1': "100"}
+    possAveraging = {'0': "00", '8': "01", '32': "10", '64': "11"}
+    possModes = {"OS": "10", "CC": "11", "OFF": "000000" }
 
     # error check
-    allBitstrings = {}
+    bitstring = []
+
     for config in modedict:
         arr = config.split("_")
         mode = arr[0]
         averages = arr[1]
         convTime = arr[2]
 
-        bitstring = []
-        i = 0
+        str = ""
         if mode == "CC":
-            i += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
-            print(i)
-            bitstring.append(i)
-            print(bitstring)
+
+            print()
+            str += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
+            bitstring.append(str)
             # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
             # bitstring.append(s)
             # bitstring.append(possModes[mode])
             # bitstring.append(possCCtimes[convTime])
             # bitstring.append(possAveraging[averages])
         elif mode == "OS":
-            i += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
-            bitstring.append(i)
+            str += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
+            bitstring.append(str)
             # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
             # bitstring.append(s)
             # bitstring.append(possModes[mode])
             # bitstring.append(possOStimes[convTime])
             # bitstring.append(possAveraging[averages])
         elif mode == "OFF": 
-            bitstring.append(0b0)
+            bitstring.append(possModes[mode])
             # bitstring.append(0b0)
 
     return bitstring
@@ -61,14 +61,26 @@ def generateBitsMPU6050(modedict: dict) -> list:
 
     return bitstring
 
+def convertToInt(string):
+    return [int(str, 2) for str in string]
+
 def generateAll(TMPparams, MPUparams):
     TMPbitstring= generateBitsTMP117(TMPparams)
     MPUbitstring= generateBitsMPU6050(MPUparams)
 
-    return TMPbitstring, MPUbitstring
+    TMPint = convertToInt(TMPbitstring)
+    # MPUint = convertToInt(MPUbitstring)
+    # ACCint = convertToInt()
+    # THERMOint = convertToInt()
+    # CAPint = convertToInt()
+    # magint = convertToInt()
+
+    return TMPint, MPUint
+
+# bitstring order: tmp, acc, thermopile, cap, mag
 
 TMPparams = {"CC_32_16":15, "OS_64_1":15, "OS_32_0.0155":40, "OFF_0_0": 10} 
 MPUparams = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40, "accelerometer_only_0_90": 20}
 
-TMPbitstring, MPUbitstring = generateAll(TMPparams, MPUparams)
-print(TMPbitstring)
+TMPint, MPUint = generateAll(TMPparams, MPUparams)
+print(TMPint)
