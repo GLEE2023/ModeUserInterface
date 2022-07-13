@@ -75,9 +75,9 @@ class MPU6050(Sensor):
         power_used = 0
         try:
             split_string = mode.split("_")
-            if int(split_string[-2]) not in (0,1):
+            if int(split_string[-2]) not in (0,1):#if digital low pass is not 0 or 1.
                 raise Exception("Digital low pass must be either 0 or 1.")
-            elif len(bin(int(split_string[-1]))[2:]) > 8:
+            elif len(bin(int(split_string[-1]))[2:]) > 8:#if number of bits is greater than 9.
                 raise Exception("Sample rate divisor must be an 8 bit number (0 to 255).")
 
             trymode = '_'.join(split_string[0:-2])
@@ -179,7 +179,30 @@ class MPU6050(Sensor):
         else:
             measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
         
-        if(mode == "accelerometer_only" or mode == "gyroscope_only" or mode == "gyroscope_DMP" or mode[0:16] == "low_power_wakeup"):
-            return 6*measure_rate
-        else:
+        if mode[0:22] == "gyroscope_accelerometer":
             return 12*measure_rate
+        return 6*measure_rate
+
+
+def generateBitString(modedict: dict) -> list:
+    
+    bitstring = []
+    bitmodedict = {
+        "low_power_wakeup_1.25":0b0000, "low_power_wakeup_5":0b0001, "low_power_wakeup_20":0b0010, 
+        "low_power_wakeup_40":0b0011, "accelerometer_only":0b0100, "gyroscope_only":0b0101,
+        "gyroscope_DMP":0b0110, "gyroscope_accelerometer":0b0111, "gyroscope_accelerometer_DMP":0b1000
+    }
+    
+    for mode in modedict.keys():
+        temparray = []
+        split_mode = mode.split("_")
+        temparray.append(bin(int(split_mode[-2])))
+        temparray.append(bin(int(split_mode[-1])))
+        temparray.append(bin(bitmodedict['_'.join(split_mode[0:-2])]))
+        bitstring.append(temparray)
+
+    return bitstring
+
+modedict = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40, "accelerometer_only_0_90": 20}
+x = generateBitString(modedict)
+print(x)
