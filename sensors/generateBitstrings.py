@@ -17,19 +17,30 @@ def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 diff
         convTime = arr[2]
 
         bitstring = []
+        i = 0
         if mode == "CC":
-            bitstring.append(possModes[mode])
-            bitstring.append(possCCtimes[convTime])
-            bitstring.append(possAveraging[averages])
+            i += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
+            print(i)
+            bitstring.append(i)
+            print(bitstring)
+            # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
+            # bitstring.append(s)
+            # bitstring.append(possModes[mode])
+            # bitstring.append(possCCtimes[convTime])
+            # bitstring.append(possAveraging[averages])
         elif mode == "OS":
-            bitstring.append(possModes[mode])
-            bitstring.append(possOStimes[convTime])
-            bitstring.append(possAveraging[averages])
+            i += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
+            bitstring.append(i)
+            # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
+            # bitstring.append(s)
+            # bitstring.append(possModes[mode])
+            # bitstring.append(possOStimes[convTime])
+            # bitstring.append(possAveraging[averages])
         elif mode == "OFF": 
-            bitstring = 0b0
+            bitstring.append(0b0)
+            # bitstring.append(0b0)
 
-    print()
-    return allBitstrings
+    return bitstring
 
 def generateBitsMPU6050(modedict: dict) -> list:
     
@@ -60,4 +71,4 @@ TMPparams = {"CC_32_16":15, "OS_64_1":15, "OS_32_0.0155":40, "OFF_0_0": 10}
 MPUparams = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40, "accelerometer_only_0_90": 20}
 
 TMPbitstring, MPUbitstring = generateAll(TMPparams, MPUparams)
-print(TMPbitstring, MPUbitstring)
+print(TMPbitstring)
