@@ -11,6 +11,17 @@ class TMP117():
         self.activeTimeParams = activeTimeParams
         self.loop_rate = loop_rate
     
+    def configsTMP(self):
+        possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
+        possOStimes = ['0.0155', '0.125', '0.5', '1']
+        possAveraging = ['0', '8', '32', '64']
+
+        CC_Configs = ["CC_"+av+"_"+time for time in possCCtimes for av in possAveraging]
+        OS_Configs = ["OS_"+av+"_"+time for time in possOStimes for av in possAveraging]
+        AllConfigs = CC_Configs + OS_Configs + ["OFF_0_0"]
+
+        return AllConfigs
+
     def errorCheck(self):
         """
             This function checks for valid inputs and prints out a statement displaying the given inputs if invalid. 
@@ -20,10 +31,11 @@ class TMP117():
             Args: none
             Returns: none
         """
-        possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
-        possOStimes = ['0.0155', '0.125', '0.5', '1']
-        possAveraging = ['0', '8', '32', '64']
-        possModes = ["OS", "CC", "OFF"]
+        # possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
+        # possOStimes = ['0.0155', '0.125', '0.5', '1']
+        # possAveraging = ['0', '8', '32', '64']
+        # possModes = ["OS", "CC", "OFF"]
+        allConfigs = self.configsTMP()
 
         # checking if time intervals overlap
         sortedActiveTimes = sorted(self.activeTimeParams, key = lambda x: x[0])
@@ -31,27 +43,10 @@ class TMP117():
             if sortedActiveTimes[index+1][0] < sortedActiveTimes[index][1]: # interval overlaps
                 print("ERROR: Overlapping intervals {} and {}.".format(sortedActiveTimes[index], sortedActiveTimes[index+1]))
 
-        # for params in self.activeTimeParams:
-        #     x = params[2].split("_")
-        #     mode = x[0]
-        #     num_averages = x[1]
-        #     convCycleTime = x[2]
-
-        #     if mode not in possModes:
-        #         print("Invalid Mode of {} in {}. Possible inputs: {}".format(mode, params, possModes))
-        #     else:
-        #         if mode == "CC" and convCycleTime not in possCCtimes:
-        #             print("Invalid CC conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possCCtimes))
-        #         if mode == "OS" and convCycleTime not in possOStimes:
-        #             print("Invalid OS conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possOStimes))
-        #         if mode == "OFF":
-        #             if convCycleTime != 0:
-        #                 print()
-        #             if num_averages != 0:
-        #                 print("Invalid OS conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possOStimes))
-        #         if num_averages not in possAveraging:
-        #             print("Invalid Averaging {} in {}. Possible inputs: {}".format(num_averages, params, possAveraging))
-
+        for param in self.activeTimeParams:
+            print(param)
+            if param not in allConfigs:
+                print("Error. Invalid param {}. Valid Params to choose from: {}".format(param, allConfigs))
             
     def computePower(self, num_averages, convCycleTime, mode):
         """
