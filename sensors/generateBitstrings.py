@@ -6,7 +6,7 @@ def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 diff
     possCCtimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
     possOStimes = {'0.0155': "000", '0.125': "001", '0.5': "011", '1': "100"}
     possAveraging = {'0': "00", '8': "01", '32': "10", '64': "11"}
-    possModes = {"OS": "10", "CC": "11", "OFF": "000000" }
+    possModes = {"OS": "10", "CC": "11", "OFF": "000000"}
 
     # error check
     bitstring = []
@@ -46,9 +46,9 @@ def generateBitsMPU6050(modedict: dict) -> list:
     
     bitstring = []
     bitmodedict = {
-        "low_power_wakeup_1.25":0b0000, "low_power_wakeup_5":0b0001, "low_power_wakeup_20":0b0010, 
-        "low_power_wakeup_40":0b0011, "accelerometer_only":0b0100, "gyroscope_only":0b0101,
-        "gyroscope_DMP":0b0110, "gyroscope_accelerometer":0b0111, "gyroscope_accelerometer_DMP":0b1000
+        "low_power_wakeup_1.25": "0000", "low_power_wakeup_5": "0001", "low_power_wakeup_20": "0010", 
+        "low_power_wakeup_40": "0011", "accelerometer_only": "0100", "gyroscope_only": "0101",
+        "gyroscope_DMP": "0110", "gyroscope_accelerometer": "0111", "gyroscope_accelerometer_DMP": "1000" 
     }
     
     for mode in modedict.keys():
