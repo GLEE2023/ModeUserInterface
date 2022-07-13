@@ -44,8 +44,8 @@ class TMP117():
                 print("ERROR: Overlapping intervals {} and {}.".format(sortedActiveTimes[index], sortedActiveTimes[index+1]))
 
         for param in self.activeTimeParams:
-            print(param)
-            if param not in allConfigs:
+            mode = param[2]
+            if mode not in allConfigs:
                 print("Error. Invalid param {}. Valid Params to choose from: {}".format(param, allConfigs))
             
     def computePower(self, num_averages, convCycleTime, mode):
