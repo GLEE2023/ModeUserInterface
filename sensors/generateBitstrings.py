@@ -43,24 +43,15 @@ def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 diff
     return bitstring
 
 def generateBitsMPU6050(modedict: dict) -> list:
-    
     bitstring = []
     bitmodedict = {
         "low_power_wakeup_1.25": "0000", "low_power_wakeup_5": "0001", "low_power_wakeup_20": "0010", 
         "low_power_wakeup_40": "0011", "accelerometer_only": "0100", "gyroscope_only": "0101",
         "gyroscope_DMP": "0110", "gyroscope_accelerometer": "0111", "gyroscope_accelerometer_DMP": "1000" 
     }
+    #dont ask how this works.
+    return [bin(int(mode.split("_")[-2]))[2:] + format(int(mode.split("_")[-1]), '08b') + bitmodedict['_'.join(mode.split("_")[0:-2])] for mode in modedict.keys()]
     
-    for mode in modedict.keys():
-        temparray = []
-        split_mode = mode.split("_")
-        temparray.append(int(split_mode[-2]))
-        temparray.append(int(split_mode[-1]))
-        temparray.append(bitmodedict['_'.join(split_mode[0:-2])])
-        bitstring.append(temparray)
-
-    return bitstring
-
 def convertToInt(string):
     return [int(str, 2) for str in string]
 
@@ -82,5 +73,7 @@ def generateAll(TMPparams, MPUparams):
 TMPparams = {"CC_32_16":15, "OS_64_1":15, "OS_32_0.0155":40, "OFF_0_0": 10} 
 MPUparams = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40, "accelerometer_only_0_90": 20}
 
-TMPint, MPUint = generateAll(TMPparams, MPUparams)
-print(TMPint)
+#TMPint, MPUint = generateAll(TMPparams, MPUparams)
+#print(TMPint)
+
+print(generateBitsMPU6050(MPUparams))
