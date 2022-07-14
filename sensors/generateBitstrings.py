@@ -85,13 +85,29 @@ def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
     CAPint = generateBitsCAP11NA(CAPparams)
     MAGint = generateBitsBM1422(BMparams)
 
-    return TMPint, THERMOint, CAPint, MAGint
+    # for int in THERMOint:
+    #     int << 13
 
-# bitstring order: tmp, acc, thermopile, cap, mag
+    return TMPint, THERMOint, CAPint, MAGint
+    
+
+
+
+# MODE 1:
+mode1_duration = 100 #seconds
+tmp_mode1 = "tmp mode"
+acc_mode1 = "acc_mode"
+
+
+#mode 2:
+
+
+
+# bitstring order: tmp 13, acc 22, thermopile 8, cap 8, mag 9
 TMPparams = [("CC_32_16", 15), ("OS_64_1", 15), ("OS_32_0.0155", 40), ("OFF_0_0", 10)]
 MPUparams = [("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20)]
 BMparams = [("1000",10), ("standby",10), ("10",40)]
 CAPparams = [("on",10), ("off",10)]
 TPparams = [("TP_only",10), ("TP_off",10)]
-TMPint = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
-print(TMPint)
+TMPint, THERMOint, CAPint, MAGint = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
+print(TMPint, THERMOint, CAPint, MAGint)
