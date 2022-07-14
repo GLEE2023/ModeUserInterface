@@ -93,14 +93,10 @@ def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
 
 
 
-# MODE 1:
+# CONFIGURATION 1:
 mode1_duration = 100 #seconds
 tmp_mode1 = "tmp mode"
 acc_mode1 = "acc_mode"
-
-
-#mode 2:
-
 
 
 # bitstring order: tmp 13, acc 22, thermopile 8, cap 8, mag 9
