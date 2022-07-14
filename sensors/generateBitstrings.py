@@ -3,8 +3,7 @@ from re import L
 import numpy as np
 
 def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 different configurations
-    possCCtimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
-    possOStimes = {'0.0155': "000", '0.125': "001", '0.5': "011", '1': "100"}
+    possTimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
     possAveraging = {'0': "00", '8': "01", '32': "10", '64': "11"}
     possModes = {"OS": "10", "CC": "11", "OFF": "000000"}
 
@@ -18,32 +17,15 @@ def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 diff
         convTime = arr[2]
 
         str = ""
-        if mode == "CC":
-
-            print()
-            str += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
-            bitstring.append(str)
-            # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
-            # bitstring.append(s)
-            # bitstring.append(possModes[mode])
-            # bitstring.append(possCCtimes[convTime])
-            # bitstring.append(possAveraging[averages])
-        elif mode == "OS":
-            str += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
-            bitstring.append(str)
-            # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
-            # bitstring.append(s)
-            # bitstring.append(possModes[mode])
-            # bitstring.append(possOStimes[convTime])
-            # bitstring.append(possAveraging[averages])
-        elif mode == "OFF": 
-            bitstring.append(possModes[mode])
-            # bitstring.append(0b0)
+        if mode == "OFF": 
+            bitstring.append(int(possModes[mode],2))
+        else:
+            str += possModes[mode] + possTimes[convTime]+ possAveraging[averages]
+            bitstring.append(int(str,2))
 
     return bitstring
 
 def generateBitsMPU6050(modedict: dict) -> list:
-    
     bitstring = []
     bitmodedict = {
         "low_power_wakeup_1.25": "0000", "low_power_wakeup_5": "0001", "low_power_wakeup_20": "0010", 
@@ -61,26 +43,36 @@ def generateBitsMPU6050(modedict: dict) -> list:
 
     return bitstring
 
-def convertToInt(string):
-    return [int(str, 2) for str in string]
+def generateBitsTP(modedict: dict) -> list:
+    bitmodedict = {"TP_only": "1","TP_off": "0"}
+    return [int(bitmodedict[mode], 2) for mode in modedict.keys()]
 
-def generateAll(TMPparams, MPUparams):
-    TMPbitstring= generateBitsTMP117(TMPparams)
-    MPUbitstring= generateBitsMPU6050(MPUparams)
+def generateBitsBM1422(modedict: dict) -> list:
+    bitmodedict = {"1000":"11", "standby":"01", "10":"10", "off":"00"}
+    return [int(bitmodedict[mode], 2) for mode in modedict.keys()]
 
-    TMPint = convertToInt(TMPbitstring)
-    # MPUint = convertToInt(MPUbitstring)
-    # ACCint = convertToInt()
-    # THERMOint = convertToInt()
-    # CAPint = convertToInt()
-    # magint = convertToInt()
+def generateBitsCAP11NA(modedict: dict) -> list:
+    bitmodedict = {"on": "1","off": "0"}
+    return [int(bitmodedict[mode], 2) for mode in modedict.keys()]
 
-    return TMPint, MPUint
+def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
+    TMPint = generateBitsTMP117(TMPparams)
+    
+    #MPUbitstring= generateBitsMPU6050(MPUparams)
+    MPUint = generateBitsMPU6050(MPUparam)
+    #ACCint = convertToInt()
+    THERMOint = generateBitsTP(TPparams)
+    CAPint = generateBitsCAP11NA(CAPparams)
+    MAGint = generateBitsBM1422(BMparams)
+
+    return TMPint, THERMOint, CAPint, MAGint
 
 # bitstring order: tmp, acc, thermopile, cap, mag
 
 TMPparams = {"CC_32_16":15, "OS_64_1":15, "OS_32_0.0155":40, "OFF_0_0": 10} 
 MPUparams = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40, "accelerometer_only_0_90": 20}
-
-TMPint, MPUint = generateAll(TMPparams, MPUparams)
-print(TMPint)
+BMparams = {"1000":10, "standby":10,"10":40}
+CAPparams = {"on":10, "off":10}
+TPparams = {"TP_only":10, "TP_off":10}
+TMPint, THERMOint, CAPint, MAGint = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
+print(TMPint, THERMOint, CAPint, MAGint)
