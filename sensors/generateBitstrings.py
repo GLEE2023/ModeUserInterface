@@ -42,16 +42,21 @@ def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 diff
 
     return bitstring
 
-def generateBitsMPU6050(modedict: dict) -> list:
-    bitstring = []
+def generateBitsMPU6050(modelist: list) -> list:
+    """
+        modelist must be a numpy array. returns a list of integers representing the configuration bits.
+    """
+    
     bitmodedict = {
         "low_power_wakeup_1.25": "0000", "low_power_wakeup_5": "0001", "low_power_wakeup_20": "0010", 
         "low_power_wakeup_40": "0011", "accelerometer_only": "0100", "gyroscope_only": "0101",
         "gyroscope_DMP": "0110", "gyroscope_accelerometer": "0111", "gyroscope_accelerometer_DMP": "1000" 
     }
     #dont ask how this works.
-    return [bin(int(mode.split("_")[-2]))[2:] + format(int(mode.split("_")[-1]), '08b') + bitmodedict['_'.join(mode.split("_")[0:-2])] for mode in modedict.keys()]
-    
+    #bitstring is digital low pass (1 bit), then sample rate divisor (8 bits), then mode (4 bits), then duration (7 bits) - 20 bits in total
+    bitstringArray = [bin(int(mode[0].split("_")[-2]))[2:] + format(int(mode[0].split("_")[-1]), '08b') + bitmodedict['_'.join(mode[0].split("_")[0:-2])] + format(int(mode[1]), '07b') for mode in modelist]
+    return [int(i, 2) for i in bitstringArray]
+
 def convertToInt(string):
     return [int(str, 2) for str in string]
 
@@ -76,4 +81,7 @@ MPUparams = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40
 #TMPint, MPUint = generateAll(TMPparams, MPUparams)
 #print(TMPint)
 
-print(generateBitsMPU6050(MPUparams))
+modedict = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
+
+
+print(generateBitsMPU6050(modedict))
