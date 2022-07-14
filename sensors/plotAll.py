@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
-def generateActiveList(total_time: float, modedict:dict) -> list:
+def generateActiveList(total_time: float, modelist:list) -> list:
     """
         Returns list similar to the form of active_times, but based off of modedict.
         active_times: [(int(start1), int(end1), "mode1"), (int(start2), int(end2), "mode2")]
@@ -17,7 +18,7 @@ def generateActiveList(total_time: float, modedict:dict) -> list:
 
         args:
             total_time (float): total active time of the sensor, ie 10 seconds or 10 hours.
-            modedict (dict): dictionary describing scheduling period based off of modedict. See example.
+            modelist (list): numpy array describing scheduling period based off of modedict. See example.
             modedict form: {string(mode1):int(duration1), string(mode2):int(duration2), ...}
 
         returns:
@@ -27,23 +28,26 @@ def generateActiveList(total_time: float, modedict:dict) -> list:
     #for accelerometer:
     #modedict = {"gyroscope_accelerometer_DMP":15, "accelerometer_only":15,"low_power_wakeup_5":40}
     #total period is 70 seconds (15+15+40)
+    keys = modelist[:,0]
     finalArr = []
     curTime = 0
     flag = False
     while curTime < total_time:
-        for key in modedict:
-            if curTime+modedict[key]>total_time:
+        #for val in values:
+        for item in modelist:
+            modeDuration = int(item[1])
+            if curTime+modeDuration>total_time:
                 flag = True
                 break
-            finalArr.append((curTime, curTime+modedict[key], key))
-            curTime += modedict[key]
+            finalArr.append((curTime, curTime+modeDuration, item[0]))
+            curTime += modeDuration
         if flag: 
             break
-    mode = len(finalArr) % len(modedict)
+    mode = len(finalArr) % len(modelist)
     if finalArr[-1][1] > total_time:
-        finalArr[-1] = (finalArr[-1][0], total_time, list(modedict.keys())[mode])
+        finalArr[-1] = (finalArr[-1][0], total_time, keys[mode])
     elif finalArr[-1][1] < total_time:
-        finalArr.append((finalArr[-1][1], total_time, list(modedict.keys())[mode]))
+        finalArr.append((finalArr[-1][1], total_time, keys[mode]))
     return finalArr
     #finalArr is a list of tuples in the form (start, stop, mode): [(start,stop, mode), ...]
 
@@ -81,3 +85,7 @@ def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, powe
     plt.ylabel("Data",fontsize=16)
     plt.title("Data vs Time All Sensors",fontsize=16)
     plt.legend();
+
+
+modedict = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_0",40), ("accelerometer_only_1_255", 20), ("low_power_wakeup_1.25_1_255",50)])
+print(generateActiveList(1000, modedict))
