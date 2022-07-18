@@ -38,7 +38,7 @@ def generateBitsMPU6050(modelist: list) -> list:
     }
     #dont ask how this works.
     #bitstring is digital low pass (3 bit), then sample rate divisor (8 bits), then mode (4 bits), then duration (7 bits) - 22 bits in total
-    bitstringArray = [bin(int(mode[0].split("_")[-2]))[2:] + format(int(mode[0].split("_")[-1]), '08b') + bitmodedict['_'.join(mode[0].split("_")[0:-2])] + format(int(mode[1]), '07b') for mode in modelist]
+    bitstringArray = [bin(int(mode[0].split("_")[-2]))[2:] + format(int(mode[0].split("_")[-1]), '08b') + bitmodedict['_'.join(mode[0].split("_")[0:-2])] for mode in modelist]
     return [int(i, 2) for i in bitstringArray]
 
 def generateBitsTP(paramList: list):
@@ -98,9 +98,10 @@ acc_mode1 = "acc_mode"
 
 # bitstring order: tmp 13, acc 22, thermopile 8, cap 8, mag 9
 TMPparams = [("CC_32_16", 15), ("OS_64_1", 15), ("OS_32_0.0155", 40), ("OFF_0_0", 10)]
-MPUparams = [("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20)]
+MPUparams = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
 BMparams = [("1000",10), ("standby",10), ("10",40)]
 CAPparams = [("on",10), ("off",10)]
 TPparams = [("TP_only",10), ("TP_off",10)]
 TMPint, THERMOint, CAPint, MAGint = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
 print(TMPint, THERMOint, CAPint, MAGint)
+print(generateBitsMPU6050(MPUparams))

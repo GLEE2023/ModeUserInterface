@@ -138,13 +138,14 @@ class MPU6050(Sensor):
                 if start_index < 0 or end_index > len(self.time): 
                     print("Error. Index not valid.")
                     return -1
-                
+                curPower = self.getModePower(times[2])
+                curData = self.getBytesPerSecond(times[2])
                 for i in range(start_index, length):
-                    powerarr[i] = self.getModePower(times[2])
+                    powerarr[i] = curPower
                     if i == 0:
-                        dataarr[i] = self.getBytesPerSecond(times[2])
+                        dataarr[i] = curData
                     else:
-                        dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
+                        dataarr[i] = dataarr[i-1] + curData
             except Exception as e:
                 print(e)
                 raise
@@ -164,7 +165,6 @@ class MPU6050(Sensor):
         #this function will be heavily influenced by sample_rate_divisor. See page 11 of the register map for the full equation.
         #https://invensense.tdk.com/wp-content/uploads/2015/02/MPU-6000-Register-Map1.pdf
         measure_rate = 0
-        self.getModePower(mode)
         #calculate sample rate.
 
         digital_low_pass = int(mode.split("_")[-2])
@@ -175,6 +175,7 @@ class MPU6050(Sensor):
         #accelerometer measurement registers, in Hz.
 
         if(mode[0:16] == "low_power_wakeup"):
+            self.getModePower(mode)
             measure_rate = self.low_power_wakeup
         else:
             measure_rate = (self.loop_rate, sample_rate)[self.loop_rate > sample_rate]#Whichever is lower is taken, in Hz. 
