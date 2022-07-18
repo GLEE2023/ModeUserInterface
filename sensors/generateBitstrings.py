@@ -1,4 +1,5 @@
 import numpy as np
+import itertools 
 
 def generateBitsTMP117(paramList): # TMP - 6 bits to encode 48 different configurations
     possTimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
@@ -74,34 +75,38 @@ def generateBitsCAP11NA(paramList: list):
 
 def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
     TMPint = generateBitsTMP117(TMPparams)
-    
-    #MPUbitstring= generateBitsMPU6050(MPUparams)
-    #MPUint = generateBitsMPU6050(MPUparam)
-    #ACCint = convertToInt()
+    ACCint= generateBitsMPU6050(MPUparams)
     THERMOint = generateBitsTP(TPparams)
     CAPint = generateBitsCAP11NA(CAPparams)
     MAGint = generateBitsBM1422(BMparams)
 
-    # for int in THERMOint:
+    #all_bitstrings = [TMPint, ACCint, THERMOint, CAPint, MAGint]
+    #largest_list = (min(all_bitstrings, key=lambda k: -len(k))) # getting largest list in 2d list
+
+    bit_lengths = {0:6, 1:12, 2:1, 3:1, 4:2} # bitstring order: tmp 13, acc 22, thermopile 8, cap 8, mag 9
+    for configurations in itertools.zip_longest(TMPint, ACCint, THERMOint, CAPint, MAGint): 
+        config_bitstring = configurations[0] << 22 # tmp is the first configuration
+        for index, sensor in configurations:
+            if index == 0:
+                # don't do anything, tmp doesn't need to be masked
+            elif index == 1:
+            elif index == 2:
+            elif index == 3:
+            elif index == 4:
+            
+    # for int in largest_list:
     #     int << 13
 
-    return TMPint, THERMOint, CAPint, MAGint
-    
-
-
+    return 
 
 # CONFIGURATION 1:
 mode1_duration = 100 #seconds
 tmp_mode1 = "tmp mode"
 acc_mode1 = "acc_mode"
 
-
-# bitstring order: tmp 13, acc 22, thermopile 8, cap 8, mag 9
 TMPparams = [("CC_32_16", 15), ("OS_64_1", 15), ("OS_32_0.0155", 40), ("OFF_0_0", 10)]
 MPUparams = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
 BMparams = [("1000",10), ("standby",10), ("10",40)]
 CAPparams = [("on",10), ("off",10)]
 TPparams = [("TP_only",10), ("TP_off",10)]
-TMPint, THERMOint, CAPint, MAGint = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
-print(TMPint, THERMOint, CAPint, MAGint)
-print(generateBitsMPU6050(MPUparams))
+res = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
