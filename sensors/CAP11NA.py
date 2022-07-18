@@ -56,12 +56,14 @@ class CAP11NA(Sensor):
                 print("Error. Index not valid.")
                 return -1
             
+            curPower = self.getModePower(times[2])
+            curData = self.getBytesPerSecond(times[2])
             for i in range(start_index, length):
-                powerarr[i] = cap_estimated_power_usage
+                powerarr[i] = curPower
                 if i == 0:
-                    dataarr[i] = self.getBytesPerSecond()
+                    dataarr[i] = curData
                 else:
-                    dataarr[i] = dataarr[i-1] + self.getBytesPerSecond()
+                    dataarr[i] = dataarr[i-1] + curData
             
         return np.array(powerarr), np.array(dataarr)
 

@@ -85,12 +85,14 @@ class TP(Sensor):
                 print("Warning. Active times is longer than the duration")
             
             
+            curPower = self.getModePower(times[2])
+            curData = self.getBytesPerSecond(times[2])
             for i in range(start_index, length):
-                powerarr[i] = self.getModePower(times[2])
+                powerarr[i] = curPower
                 if i == 0:
-                    dataarr[i] = self.getBytesPerSecond(times[2])
+                    dataarr[i] = curData
                 else:
-                    dataarr[i] = dataarr[i-1] + self.getBytesPerSecond(times[2])
+                    dataarr[i] = dataarr[i-1] + curData
             
         return powerarr, dataarr
 
