@@ -110,6 +110,8 @@ class MPU6050(Sensor):
                 power_used = gyroscope_accelerometer_power_milliamps * voltage
             elif(trymode == "gyroscope_accelerometer_DMP"):
                 power_used = gyroscope_accelerometer_DMP_power_milliamps * voltage
+            elif(trymode == "sleep"):
+                power_used = 0
         except Exception as e:
             print(e)
             raise
