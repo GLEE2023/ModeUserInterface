@@ -50,7 +50,8 @@ class SM141K():
 
         power = np.cos(psi) * SOLAR_CONSTANT * SURFACE_AREA * CELL_EFFICIENCY * 1000
 
-        power = [num if num < MAX_POWER_OUT else MAX_POWER_OUT for num in power]
+        if power>MAX_POWER_OUT:
+            power=MAX_POWER_OUT
 
         return power
 
@@ -173,6 +174,7 @@ class SM141K():
 
             angle = self.psi(latitude, time)
             powers[i] = self.power(angle)
+
 
         return times, powers
 
