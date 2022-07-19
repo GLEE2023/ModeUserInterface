@@ -43,7 +43,15 @@ class SM141K():
         returns:
             power (float): power in milliwatts of power produced by solar panelS
         """
-        power = np.cos(psi) * 154
+        SOLAR_CONSTANT = 1360 # W/m^2
+        SURFACE_AREA = .0008772 #m^2
+        CELL_EFFICIENCY = 0.25
+        MAX_POWER_OUT
+
+        power = np.cos(psi) * SOLAR_CONSTANT * SURFACE_AREA * CELL_EFFICIENCY
+
+        power = [num if num < MAX_POWER_OUT else MAX_POWER_OUT for num in power]
+
         return power
 
     # Analytical Equation for the Dayside Temperature (from Hurley et al, 2015)
