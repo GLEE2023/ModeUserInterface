@@ -185,8 +185,3 @@ class MPU6050(Sensor):
         if mode[0:22] == "gyroscope_accelerometer":
             return 12*measure_rate
         return 6*measure_rate
-
-
-modedict = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
-print(modedict[:,0])
-#print([i[0] for i in modedict[:]])

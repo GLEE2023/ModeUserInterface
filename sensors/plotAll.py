@@ -86,6 +86,3 @@ def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, powe
     plt.title("Data vs Time All Sensors",fontsize=16)
     plt.legend();
 
-
-modedict = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_0",40), ("accelerometer_only_1_255", 20), ("low_power_wakeup_1.25_1_255",50)])
-print(generateActiveList(1000, modedict))
