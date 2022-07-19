@@ -46,9 +46,9 @@ class SM141K():
         SOLAR_CONSTANT = 1360 # W/m^2
         SURFACE_AREA = .0008772 #m^2
         CELL_EFFICIENCY = 0.25
-        MAX_POWER_OUT
+        MAX_POWER_OUT = 184 #mW
 
-        power = np.cos(psi) * SOLAR_CONSTANT * SURFACE_AREA * CELL_EFFICIENCY
+        power = np.cos(psi) * SOLAR_CONSTANT * SURFACE_AREA * CELL_EFFICIENCY * 1000
 
         power = [num if num < MAX_POWER_OUT else MAX_POWER_OUT for num in power]
 
