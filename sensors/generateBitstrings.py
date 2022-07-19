@@ -10,8 +10,6 @@ def generateBitsTMP117(paramList): # TMP - 6 bits to encode 48 different configu
     bitstring = []
     paramList = np.array(paramList)
     params = paramList[:,0]
-    durations = [int(duration) for duration in paramList[:,1]]
-    bit_durations = [format(duration,'07b') for duration in durations] # getting duration in 7 bit string format
     
     for index in range(len(params)):
         arr = params[index].split("_")
@@ -21,9 +19,9 @@ def generateBitsTMP117(paramList): # TMP - 6 bits to encode 48 different configu
 
         str = ""
         if mode == "OFF": 
-            bitstring.append(int(possModes[mode] + bit_durations[index],2))
+            bitstring.append(int(possModes[mode],2))
         else:
-            str += possModes[mode] + possTimes[convTime] + possAveraging[averages] + bit_durations[index]
+            str += possModes[mode] + possTimes[convTime] + possAveraging[averages]
             bitstring.append(int(str,2))
     return bitstring
 
@@ -45,33 +43,25 @@ def generateBitsMPU6050(modelist: list) -> list:
 def generateBitsTP(paramList: list):
     bitmodedict = {"TP_only": "1","TP_off": "0"}
 
-    bitstring = []
     paramList = np.array(paramList)
     params = paramList[:,0]
-    durations = [int(duration) for duration in paramList[:,1]]
-    bit_durations = [format(duration,'07b') for duration in durations] # getting duration in 7 bit string format
 
-    return [int(bitmodedict[params[index]] + bit_durations[index], 2) for index in range(len(params))]
+    return [int(bitmodedict[params[index]], 2) for index in range(len(params))]
 
 def generateBitsBM1422(paramList: list):
     bitmodedict = {"1000":"11", "standby":"01", "10":"10", "off":"00"}
     bitstring = []
     paramList = np.array(paramList)
     params = paramList[:,0]
-    durations = [int(duration) for duration in paramList[:,1]]
-    bit_durations = [format(duration,'07b') for duration in durations] # getting duration in 7 bit string format
 
-    return [int(bitmodedict[params[index]] + bit_durations[index], 2) for index in range(len(params))]
+    return [int(bitmodedict[params[index]], 2) for index in range(len(params))]
 
 def generateBitsCAP11NA(paramList: list):
     bitmodedict = {"on": "1","off": "0"}
-    bitstring = []
     paramList = np.array(paramList)
     params = paramList[:,0]
-    durations = [int(duration) for duration in paramList[:,1]]
-    bit_durations = [format(duration,'07b') for duration in durations] # getting duration in 7 bit string format
-
-    return [int(bitmodedict[params[index]] + bit_durations[index], 2) for index in range(len(params))]
+    
+    return [int(bitmodedict[params[index]], 2) for index in range(len(params))]
 
 def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
     TMPint = generateBitsTMP117(TMPparams)
@@ -83,21 +73,33 @@ def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
     #all_bitstrings = [TMPint, ACCint, THERMOint, CAPint, MAGint]
     #largest_list = (min(all_bitstrings, key=lambda k: -len(k))) # getting largest list in 2d list
 
-    bit_lengths = {0:6, 1:12, 2:1, 3:1, 4:2} # bitstring order: tmp 13, acc 22, thermopile 8, cap 8, mag 9
+    bit_lengths = {1:15, 2:1, 3:1, 4:2} # bitstring order: tmp, acc, thermopile, cap, mag
+    all_configs = []
     for configurations in itertools.zip_longest(TMPint, ACCint, THERMOint, CAPint, MAGint): 
-        config_bitstring = configurations[0] << 22 # tmp is the first configuration
-        for index, sensor in configurations:
-            if index == 0:
-                # don't do anything, tmp doesn't need to be masked
-            elif index == 1:
-            elif index == 2:
-            elif index == 3:
-            elif index == 4:
-            
-    # for int in largest_list:
-    #     int << 13
+        #print(configurations)
+        
+        if configurations[0] == 0: 
+            config_bitstring = 1 << 6
+        else: config_bitstring = configurations[0]
 
-    return 
+        for index in range(1,len(configurations)):
+            config_bitstring <<= bit_lengths[index] # shifting 
+            if configurations[index] != None: # masking
+                config_bitstring |= configurations[index]
+        
+        if configurations[0] == 0:
+            config_bitstring &= 0b0111111111111111111111111
+
+
+        all_configs.append(config_bitstring)
+    for configurations in itertools.zip_longest(TMPint, ACCint, THERMOint, CAPint, MAGint): 
+        for j in configurations:
+            if j != None:
+                print(bin(j))
+            else: print("None")
+        print("\n")
+
+    return all_configs 
 
 # CONFIGURATION 1:
 mode1_duration = 100 #seconds
