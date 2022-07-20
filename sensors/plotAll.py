@@ -122,4 +122,4 @@ def plotData(self, power_vector, data_vector, time_vector, active_times):
         ax2.set_ylabel('Data (Bytes)')
         ax2.set_xlabel('Seconds')
 
-        plt.show()
+modedict = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_0",40), ("accelerometer_only_1_255", 20), ("low_power_wakeup_1.25_1_255",50)])

@@ -29,7 +29,6 @@ def generateBitsMPU6050(modelist: list) -> list:
     """
         modelist must be a numpy array. returns a list of integers representing the configuration bits.
     """
-    
     bitmodedict = {
         "Off":"0000","low_power_wakeup_1.25": "0001", "low_power_wakeup_5": "0010", "low_power_wakeup_20": "0011", 
         "low_power_wakeup_40": "0100", "accelerometer_only": "0101", "gyroscope_only": "0110",
@@ -50,7 +49,6 @@ def generateBitsTP(paramList: list):
 
 def generateBitsBM1422(paramList: list):
     bitmodedict = {"1000":"11", "standby":"01", "10":"10", "off":"00"}
-    bitstring = []
     paramList = np.array(paramList)
     params = paramList[:,0]
 
