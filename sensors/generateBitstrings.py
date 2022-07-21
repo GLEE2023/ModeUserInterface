@@ -1,87 +1,105 @@
-import itertools
-from re import L
 import numpy as np
+import itertools 
 
-def generateBitsTMP117(modedict: dict) -> list: # TMP - 6 bits to encode 48 different configurations
-    possCCtimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
-    possOStimes = {'0.0155': "000", '0.125': "001", '0.5': "011", '1': "100"}
+def generateBitsTMP117(paramList): # TMP - 6 bits to encode 48 different configurations
+    possTimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
     possAveraging = {'0': "00", '8': "01", '32': "10", '64': "11"}
     possModes = {"OS": "10", "CC": "11", "OFF": "000000"}
 
     # error check
     bitstring = []
-
-    for config in modedict:
-        arr = config.split("_")
+    paramList = np.array(paramList)
+    params = paramList[:,0]
+    
+    for index in range(len(params)):
+        arr = params[index].split("_")
         mode = arr[0]
         averages = arr[1]
         convTime = arr[2]
 
         str = ""
-        if mode == "CC":
-
-            print()
-            str += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
-            bitstring.append(str)
-            # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
-            # bitstring.append(s)
-            # bitstring.append(possModes[mode])
-            # bitstring.append(possCCtimes[convTime])
-            # bitstring.append(possAveraging[averages])
-        elif mode == "OS":
-            str += possModes[mode] + possCCtimes[convTime]+ possAveraging[averages]
-            bitstring.append(str)
-            # s = [possModes[mode], possCCtimes[convTime],possAveraging[averages]]
-            # bitstring.append(s)
-            # bitstring.append(possModes[mode])
-            # bitstring.append(possOStimes[convTime])
-            # bitstring.append(possAveraging[averages])
-        elif mode == "OFF": 
-            bitstring.append(possModes[mode])
-            # bitstring.append(0b0)
-
+        if mode == "OFF": 
+            bitstring.append(int(possModes[mode],2))
+        else:
+            str += possModes[mode] + possTimes[convTime] + possAveraging[averages]
+            bitstring.append(int(str,2))
     return bitstring
 
 def generateBitsMPU6050(modelist: list) -> list:
     """
         modelist must be a numpy array. returns a list of integers representing the configuration bits.
     """
-    
     bitmodedict = {
         "Off":"0000","low_power_wakeup_1.25": "0001", "low_power_wakeup_5": "0010", "low_power_wakeup_20": "0011", 
         "low_power_wakeup_40": "0100", "accelerometer_only": "0101", "gyroscope_only": "0110",
         "gyroscope_DMP": "0111", "gyroscope_accelerometer": "1000", "gyroscope_accelerometer_DMP": "1001" 
     }
     #dont ask how this works.
-    #bitstring is digital low pass (3 bit), then sample rate divisor (8 bits), then mode (4 bits), then duration (7 bits) - 22 bits in total
-    bitstringArray = [bin(int(mode[0].split("_")[-2]))[2:] + format(int(mode[0].split("_")[-1]), '08b') + bitmodedict['_'.join(mode[0].split("_")[0:-2])] + format(int(mode[1]), '07b') for mode in modelist]
+    #bitstring is digital low pass (3 bit), then sample rate divisor (8 bits), then mode (4 bits) - 15 bits
+    bitstringArray = [bin(int(mode[0].split("_")[-2]))[2:] + format(int(mode[0].split("_")[-1]), '08b') + bitmodedict['_'.join(mode[0].split("_")[0:-2])] for mode in modelist]
     return [int(i, 2) for i in bitstringArray]
 
-def convertToInt(string):
-    return [int(str, 2) for str in string]
+def generateBitsTP(paramList: list):
+    bitmodedict = {"TP_only": "1","TP_off": "0"}
+    paramList = np.array(paramList)
+    params = paramList[:,0]
 
-def generateAll(TMPparams, MPUparams):
-    TMPbitstring= generateBitsTMP117(TMPparams)
-    MPUbitstring= generateBitsMPU6050(MPUparams)
+    return [int(bitmodedict[params[index]], 2) for index in range(len(params))]
 
-    TMPint = convertToInt(TMPbitstring)
-    # MPUint = convertToInt(MPUbitstring)
-    # ACCint = convertToInt()
-    # THERMOint = convertToInt()
-    # CAPint = convertToInt()
-    # magint = convertToInt()
+def generateBitsBM1422(paramList: list):
+    bitmodedict = {"1000":"11", "standby":"01", "10":"10", "off":"00"}
+    paramList = np.array(paramList)
+    params = paramList[:,0]
 
-    return TMPint, MPUint
+    return [int(bitmodedict[params[index]], 2) for index in range(len(params))]
 
-# bitstring order: tmp, acc, thermopile, cap, mag
+def generateBitsCAP11NA(paramList: list):
+    bitmodedict = {"on": "1","off": "0"}
+    paramList = np.array(paramList)
+    params = paramList[:,0]
+    
+    return [int(bitmodedict[params[index]], 2) for index in range(len(params))]
 
-TMPparams = {"CC_32_16":15, "OS_64_1":15, "OS_32_0.0155":40, "OFF_0_0": 10} 
-MPUparams = {"low_power_wakeup_1.25_1_255":50, "gyroscope_accelerometer_0_75":40, "accelerometer_only_0_90": 20}
+def generateAllBitstrings(TMPparams, MPUparams, BMparams, TPparams, CAPparams):
+    TMPint = generateBitsTMP117(TMPparams)
+    ACCint= generateBitsMPU6050(MPUparams)
+    THERMOint = generateBitsTP(TPparams)
+    CAPint = generateBitsCAP11NA(CAPparams)
+    MAGint = generateBitsBM1422(BMparams)
 
-#TMPint, MPUint = generateAll(TMPparams, MPUparams)
-#print(TMPint)
+    bit_lengths = {1:15, 2:1, 3:1, 4:2} # bitstring order: tmp, acc, thermopile, cap, mag
+    all_configs = []
+    for configurations in itertools.zip_longest(TMPint, ACCint, THERMOint, CAPint, MAGint): 
+        config_bitstring = 1 << 7 # need 1 as the MSB to keep the leading zeroes
+        config_bitstring |= configurations[0] # masking to get tmp bits
 
-modedict = np.array([("low_power_wakeup_1.25_001_255",50), ("gyroscope_accelerometer_000_75",40), ("accelerometer_only_100_90", 20), ("low_power_wakeup_1.25_101_255",50)])
+        for index in range(1,len(configurations)):
+            config_bitstring <<= bit_lengths[index] # shifting
+            if configurations[index] != None: # masking
+                config_bitstring |= configurations[index]
 
+        all_configs.append(config_bitstring)
 
-print(generateBitsMPU6050(modedict))
+    # for c in itertools.zip_longest(TMPint, ACCint, THERMOint, CAPint, MAGint): 
+    #     for a in c:
+    #         if a != None:
+    #             print(bin(a))
+    #     print("\n")
+
+    # for c in all_configs: 
+    #     print(bin(c))
+        
+    return all_configs 
+
+if __name__ == "__main__":
+    # CONFIGURATION 1:
+    mode1_duration = 100 #seconds
+    tmp_mode1 = "tmp mode"
+    acc_mode1 = "acc_mode"
+
+    TMPparams = [("CC_32_16", 15), ("OS_64_1", 15), ("OS_32_0.0155", 40), ("OFF_0_0", 10)]
+    MPUparams = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
+    BMparams = [("1000",10), ("standby",10), ("10",40)]
+    CAPparams = [("on",10), ("off",10)]
+    TPparams = [("TP_only",10), ("TP_off",10)]
+    res = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)

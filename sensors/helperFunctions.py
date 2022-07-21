@@ -86,6 +86,39 @@ def plotTogether(time_tmp, time_acc, tp_time, cap_time, mag_time, tp_power, powe
     plt.title("Data vs Time All Sensors",fontsize=16)
     plt.legend();
 
+def plotData(self, power_vector, data_vector, time_vector, active_times):
+        #basic function to plot power and data vs time. 
+        f = plt.figure(figsize=(10,10))
+        ax3 = f.add_subplot(311)
+        plt.tick_params('x', labelbottom=False)
+        ticks = {}
+        colors = []
+        for i in range(len(active_times)):
+            color = "#%06x" % random.randint(0, 0xFFFFFF)
+            colors.append(color)
+        for i,v in enumerate(active_times):
+            if v[2] not in ticks.keys():
+                ticks[v[2]] = i
+            plt.plot([v[0],v[1]],[ticks[v[2]],ticks[v[2]]],color=colors[ticks[v[2]]])
+        plt.yticks(list(ticks.values()),list(ticks.keys()))
+        
+        line = np.full_like(time_vector, 1)
+        
+        ax1 = f.add_subplot(312, sharex=ax3)
+        plt.grid(visible=True)
+        power_plot, = plt.plot(time_vector, power_vector)
+        plt.tick_params('x', labelbottom=False)
+        #power_value_limit = [0,0.1]
+        #ax1.set_ylim(power_value_limit)
+        ax1.set_ylabel('Power (mW)')
 
-modedict = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_0",40), ("accelerometer_only_1_255", 20), ("low_power_wakeup_1.25_1_255",50)])
-print(generateActiveList(1000, modedict))
+        ax2 = f.add_subplot(313, sharex=ax3)
+        plt.tick_params('x', labelsize=12)
+        data_plot, = plt.plot(time_vector, data_vector)
+        # make these tick labels invisible
+        plt.tick_params('x', labelsize=12)
+        #data_value_limit = [0,500]
+        #ax2.set_ylim(data_value_limit)
+        ax2.set_ylabel('Data (Bytes)')
+        ax2.set_xlabel('Seconds')
+        plt.show()

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random 
-from plotAll import generateActiveList
+from helperFunctions import generateActiveList
 
 class TMP117():
     def __init__(self, time_step, duration, activeTimeParams, loop_rate): 
