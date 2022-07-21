@@ -49,7 +49,6 @@ def generateBitsCAP11NA(mode):
 def generateAllBitstrings(allConfigs): # takes in a 2d array
     configurationsInt = []
     for config in allConfigs:
-
         TMPint = generateBitsTMP117(config[0])
         ACCint= generateBitsMPU6050(config[1])
         THERMOint = generateBitsTP(config[2])
@@ -73,25 +72,22 @@ def generateAllBitstrings(allConfigs): # takes in a 2d array
         
     return allConfigsFullBitstrings
 
-# CONFIGURATION 1:
-mode1_duration = 10 # seconds
-tmp_mode1 = "CC_32_16"
-acc_mode1 = "low_power_wakeup_1.25_1_255"
-thermopile_mode1 = "TP_only"
-capacitor_mode1 = "off"
-magnetometer_mode1 = "standby"
-config1 = [tmp_mode1, acc_mode1, thermopile_mode1, capacitor_mode1, magnetometer_mode1, mode1_duration]
+# # CONFIGURATION 1:
+# mode1_duration = 10 # seconds
+# tmp_mode1 = "CC_32_16"
+# acc_mode1 = "low_power_wakeup_1.25_1_255"
+# thermopile_mode1 = "TP_only"
+# capacitor_mode1 = "off"
+# magnetometer_mode1 = "standby"
+# config1 = [tmp_mode1, acc_mode1, thermopile_mode1, capacitor_mode1, magnetometer_mode1, mode1_duration]
 
-# CONFIGURATION 2:
-mode2_duration = 10 # seconds
-tmp_mode2 = "CC_32_16"
-acc_mode2 = "accelerometer_only_0_90"
-thermopile_mode2 = "TP_off"
-capacitor_mode2 = "on"
-magnetometer_mode2 = "1000"
+# # CONFIGURATION 2:
+# mode2_duration = 10 # seconds
+# tmp_mode2 = "CC_32_16"
+# acc_mode2 = "accelerometer_only_0_90"
+# thermopile_mode2 = "TP_off"
+# capacitor_mode2 = "on"
+# magnetometer_mode2 = "1000"
+# config2 = [tmp_mode2, acc_mode2, thermopile_mode2, capacitor_mode2, magnetometer_mode2, mode2_duration]
 
-config2 = [tmp_mode2, acc_mode2, thermopile_mode2, capacitor_mode2, magnetometer_mode2, mode2_duration]
-
-
-res = generateAllBitstrings([config1, config2, config1])
-print(res)
+# res = generateAllBitstrings([config1, config2, config1])
