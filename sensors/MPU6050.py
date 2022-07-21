@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, RadioButtons
 from Sensor import Sensor
 from typing import List
-from plotAll import generateActiveList
+from helperFunctions import generateActiveList
 
 
 class MPU6050(Sensor):
