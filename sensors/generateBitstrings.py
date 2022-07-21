@@ -99,14 +99,15 @@ def generateAll(TMPparams, MPUparam, BMparams, TPparams, CAPparams):
 
     return all_configs 
 
-# CONFIGURATION 1:
-mode1_duration = 100 #seconds
-tmp_mode1 = "tmp mode"
-acc_mode1 = "acc_mode"
+if __name__ == "__main__":
+    # CONFIGURATION 1:
+    mode1_duration = 100 #seconds
+    tmp_mode1 = "tmp mode"
+    acc_mode1 = "acc_mode"
 
-TMPparams = [("CC_32_16", 15), ("OS_64_1", 15), ("OS_32_0.0155", 40), ("OFF_0_0", 10)]
-MPUparams = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
-BMparams = [("1000",10), ("standby",10), ("10",40)]
-CAPparams = [("on",10), ("off",10)]
-TPparams = [("TP_only",10), ("TP_off",10)]
-res = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
+    TMPparams = [("CC_32_16", 15), ("OS_64_1", 15), ("OS_32_0.0155", 40), ("OFF_0_0", 10)]
+    MPUparams = np.array([("low_power_wakeup_1.25_1_255",50), ("gyroscope_accelerometer_0_75",40), ("accelerometer_only_0_90", 20), ("low_power_wakeup_1.25_1_255",50)])
+    BMparams = [("1000",10), ("standby",10), ("10",40)]
+    CAPparams = [("on",10), ("off",10)]
+    TPparams = [("TP_only",10), ("TP_off",10)]
+    res = generateAll(TMPparams, MPUparams, BMparams, TPparams, CAPparams)
