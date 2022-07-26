@@ -69,6 +69,22 @@ def generateAllBitstrings(allConfigs): # takes in a 2d array
         
     return allConfigsFullBitstrings
 
+def ArduinoConfig(allConfigs, team_name):
+    file_name = team_name + '.txt'
+    f = open(file_name, 'w+')  # create file if doesn't exists otherwise open in overwrite mode
+    allBitstrings = generateAllBitstrings(allConfigs)
+    for index, config in enumerate(allBitstrings):
+        bitstring = config[0]
+        duration = config[1]
+        f.write("#DEFINE MODE_" + str(index) + " " + str(bitstring) + "\n")
+        f.write("#DEFINE DURATION_" + str(index) + " " + str(duration)+ "\n\n")
+    f.close()
+
+def readArduinoConfigs(team_name):
+    file_name = team_name + '.txt'
+    f = open(file_name, 'r') 
+    print(f.read())
+
 # # CONFIGURATION 1:
 # mode1_duration = 10 # seconds
 # tmp_mode1 = "C_32_16"

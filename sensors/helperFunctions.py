@@ -168,34 +168,34 @@ def validateInputs(configurations):
     #     if mode not in allConfigsMag:
     #         print("Not a valid mode. Did you mean:")
 
-# CONFIGURATION 1:
-mode_duration_1 = 10 # seconds
-tmp_mode_1 = "C_32_16"
-acc_mode_1 = "low_power_wakeup_1.25_1_255"
-thermopile_mode_1 = "TP_only"
-capacitor_mode_1 = "off"
-magnetometer_mode_1 = "standby"
-config_1 = [tmp_mode_1, acc_mode_1, thermopile_mode_1, capacitor_mode_1, magnetometer_mode_1, mode_duration_1]
+# # CONFIGURATION 1:
+# mode_duration_1 = 10 # seconds
+# tmp_mode_1 = "C_32_16"
+# acc_mode_1 = "low_power_wakeup_1.25_1_255"
+# thermopile_mode_1 = "TP_only"
+# capacitor_mode_1 = "off"
+# magnetometer_mode_1 = "standby"
+# config_1 = [tmp_mode_1, acc_mode_1, thermopile_mode_1, capacitor_mode_1, magnetometer_mode_1, mode_duration_1]
 
-# CONFIGURATION 2:
-mode_duration_2 = 10 # seconds
-tmp_mode2 = "CC_32_16"
-acc_mode2 = "accelerometer_only_0_90"
-thermopile_mode2 = "TP_off"
-capacitor_mode2 = "on"
-magnetometer_mode2 = "1000"
-config_2 = [tmp_mode2, acc_mode2, thermopile_mode2, capacitor_mode2, magnetometer_mode2, mode_duration_2]
+# # CONFIGURATION 2:
+# mode_duration_2 = 10 # seconds
+# tmp_mode2 = "CC_32_16"
+# acc_mode2 = "accelerometer_only_0_90"
+# thermopile_mode2 = "TP_off"
+# capacitor_mode2 = "on"
+# magnetometer_mode2 = "1000"
+# config_2 = [tmp_mode2, acc_mode2, thermopile_mode2, capacitor_mode2, magnetometer_mode2, mode_duration_2]
 
-# CONFIGURATION 3:
-mode_duration_3 = 10 # seconds
-tmp_mode_3 = "CC_32_16"
-acc_mode_3 = "accelerometer_only_0_90"
-thermopile_mode_3 = "TP_off"
-capacitor_mode_3 = "on"
-magnetometer_mode_3 = "1000"
-config_3 = [tmp_mode_3, acc_mode_3, thermopile_mode_3, capacitor_mode_3, magnetometer_mode_3, mode_duration_3]
+# # CONFIGURATION 3:
+# mode_duration_3 = 10 # seconds
+# tmp_mode_3 = "CC_32_16"
+# acc_mode_3 = "accelerometer_only_0_90"
+# thermopile_mode_3 = "TP_off"
+# capacitor_mode_3 = "on"
+# magnetometer_mode_3 = "1000"
+# config_3 = [tmp_mode_3, acc_mode_3, thermopile_mode_3, capacitor_mode_3, magnetometer_mode_3, mode_duration_3]
 
-# ADD CONFIGURATION ARRAYS HERE  
-configurations = [config_1, config_2, config_3]
+# # ADD CONFIGURATION ARRAYS HERE  
+# configurations = [config_1, config_2, config_3]
 
-validateInputs(configurations)
+# validateInputs(configurations)
