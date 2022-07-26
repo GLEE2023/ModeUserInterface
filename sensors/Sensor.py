@@ -55,7 +55,7 @@ class Sensor:
         plt.tick_params('x', labelbottom=False)
         #power_value_limit = [0,0.1]
         #ax1.set_ylim(power_value_limit)
-        ax1.set_ylabel('mW')
+        ax1.set_ylabel('Power (mW)')
 
         ax2 = f.add_subplot(313, sharex=ax3)
         plt.tick_params('x', labelsize=12)
@@ -64,7 +64,7 @@ class Sensor:
         plt.tick_params('x', labelsize=12)
         #data_value_limit = [0,500]
         #ax2.set_ylim(data_value_limit)
-        ax2.set_ylabel('Bytes')
+        ax2.set_ylabel('Data (Bytes)')
         ax2.set_xlabel('Seconds')
 
         plt.show()

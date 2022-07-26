@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import random 
-from plotAll import generateActiveList
+from helperFunctions import generateActiveList
 
 class TMP117():
     def __init__(self, time_step, duration, activeTimeParams, loop_rate): 
@@ -11,6 +11,17 @@ class TMP117():
         self.activeTimeParams = activeTimeParams
         self.loop_rate = loop_rate
     
+    def configsTMP(self):
+        possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
+        possOStimes = ['0.0155', '0.125', '0.5', '1']
+        possAveraging = ['0', '8', '32', '64']
+
+        CC_Configs = ["CC_"+av+"_"+time for time in possCCtimes for av in possAveraging]
+        OS_Configs = ["OS_"+av+"_"+time for time in possOStimes for av in possAveraging]
+        AllConfigs = CC_Configs + OS_Configs + ["OFF_0_0"]
+
+        return AllConfigs
+
     def errorCheck(self):
         """
             This function checks for valid inputs and prints out a statement displaying the given inputs if invalid. 
@@ -20,12 +31,11 @@ class TMP117():
             Args: none
             Returns: none
         """
-
-        possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
-        possOStimes = ['0.0155', '0.125', '0.5', '1']
-        possAveraging = ['0', '8', '32', '64']
-        possModes = ["OS", "CC", "OFF"]
-
+        # possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
+        # possOStimes = ['0.0155', '0.125', '0.5', '1']
+        # possAveraging = ['0', '8', '32', '64']
+        # possModes = ["OS", "CC", "OFF"]
+        allConfigs = self.configsTMP()
 
         # checking if time intervals overlap
         sortedActiveTimes = sorted(self.activeTimeParams, key = lambda x: x[0])
@@ -33,22 +43,10 @@ class TMP117():
             if sortedActiveTimes[index+1][0] < sortedActiveTimes[index][1]: # interval overlaps
                 print("ERROR: Overlapping intervals {} and {}.".format(sortedActiveTimes[index], sortedActiveTimes[index+1]))
 
-        for params in self.activeTimeParams:
-            x = params[2].split("_")
-            mode = x[0]
-            num_averages = x[1]
-            convCycleTime = x[2]
-
-            if mode not in possModes:
-                print("Invalid Mode of {} in {}. Possible inputs: {}".format(mode, params, possModes))
-            else:
-                if mode == "CC" and convCycleTime not in possCCtimes:
-                    print("Invalid CC conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possCCtimes))
-                if mode == "OS" and convCycleTime not in possOStimes:
-                    print("Invalid OS conv cycle time of {} in {}. Possible inputs: {}".format(convCycleTime, params, possOStimes))
-                if num_averages not in possAveraging:
-                    print("Invalid Averaging {} in {}. Possible inputs: {}".format(num_averages, params, possAveraging))
-
+        for param in self.activeTimeParams:
+            mode = param[2]
+            if mode not in allConfigs:
+                print("Error. Invalid param {}. Valid Params to choose from: {}".format(param, allConfigs))
             
     def computePower(self, num_averages, convCycleTime, mode):
         """
@@ -192,20 +190,21 @@ class TMP117():
         line = np.full_like(time_vector, 1)
         
         ax1 = f.add_subplot(312, sharex=ax3)
-        power_plot, = plt.plot(time_vector, power_vector)
+        plt.plot(time_vector, power_vector)
         plt.tick_params('x', labelbottom=False)
         #power_value_limit = [0,0.1]
         #ax1.set_ylim(power_value_limit)
-        ax1.set_ylabel('Average Power (mW)')
+        ax1.set_ylabel('Average Power (mW)', fontsize=15)
 
         ax2 = f.add_subplot(313, sharex=ax3)
-        data_plot, = plt.plot(time_vector, data_vector)
+        plt.plot(time_vector, data_vector)
         # make these tick labels invisible
         plt.tick_params('x', labelsize=12)
         #data_value_limit = [0,500]
         #ax2.set_ylim(data_value_limit)
-        ax2.set_ylabel('Average Data (Bytes)')
-        ax2.set_xlabel('Seconds')
+        ax3.set_ylabel('Active Modes', fontsize=15)
+        ax2.set_ylabel('Average Data (Bytes)', fontsize=15)
+        ax2.set_xlabel('Time (s)', fontsize = 20)
 
         plt.show()
     
