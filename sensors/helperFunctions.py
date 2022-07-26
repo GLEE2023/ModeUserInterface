@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import difflib
 
 def generateActiveList(total_time: float, modelist:list) -> list:
     """
@@ -122,3 +123,79 @@ def plotData(self, power_vector, data_vector, time_vector, active_times):
         ax2.set_ylabel('Data (Bytes)')
         ax2.set_xlabel('Seconds')
         plt.show()
+
+def allConfigsTMP():
+        possCCtimes = ['0.0155', '0.125', '0.25', '0.5', '1', '4', '8', '16']
+        possOStimes = ['0.0155', '0.125', '0.5', '1']
+        possAveraging = ['0', '8', '32', '64']
+
+        CC_Configs = ["CC_"+av+"_"+time for time in possCCtimes for av in possAveraging]
+        OS_Configs = ["OS_"+av+"_"+time for time in possOStimes for av in possAveraging]
+        AllConfigs = CC_Configs + OS_Configs + ["OFF_0_0"]
+
+        return AllConfigs
+
+def validateInputs(configurations):
+    configurations = np.array(configurations)
+    # tmp_modes = configurations[:,0]
+    # acc_modes = configurations[:,1]
+    # thermopile_modes = configurations[:,2]
+    # cap_modes = configurations[:,3]
+    # mag_modes = configurations[:,4]
+
+    allConfigsTemp = allConfigsTMP()
+    #allConfigsAcc = []
+    allConfigsThermo = ["TP_only", "TP_off"]
+    allConfigsCap = ["on", "off"]
+    allConfigsMag = ["1000", "standby", "10", "off"]
+
+    # for mode in tmp_modes:
+    #     if mode not in allConfigsTemp:
+    #         print("Not a valid mode. Did you mean: {}".format(difflib.get_close_matches(mode, allConfigsTMP)))
+
+    # # for mode in acc_modes:
+    # #         print("Not a valid mode. Did you mean: {}".format(difflib.get_close_matches(mode, allConfigsAcc)))
+    
+    # for mode in thermopile_modes:
+    #     if mode not in allConfigsThermo:
+    #         print("Not a valid mode. Did you mean: {}".format(difflib.get_close_matches(mode, allConfigsTMP)))
+
+    # for mode in cap_modes:
+    #     if mode not in allConfigsCap:
+    #         print("Not a valid mode. Did you mean:")
+
+    # for mode in mag_modes:
+    #     if mode not in allConfigsMag:
+    #         print("Not a valid mode. Did you mean:")
+
+# # CONFIGURATION 1:
+# mode_duration_1 = 10 # seconds
+# tmp_mode_1 = "C_32_16"
+# acc_mode_1 = "low_power_wakeup_1.25_1_255"
+# thermopile_mode_1 = "TP_only"
+# capacitor_mode_1 = "off"
+# magnetometer_mode_1 = "standby"
+# config_1 = [tmp_mode_1, acc_mode_1, thermopile_mode_1, capacitor_mode_1, magnetometer_mode_1, mode_duration_1]
+
+# # CONFIGURATION 2:
+# mode_duration_2 = 10 # seconds
+# tmp_mode2 = "CC_32_16"
+# acc_mode2 = "accelerometer_only_0_90"
+# thermopile_mode2 = "TP_off"
+# capacitor_mode2 = "on"
+# magnetometer_mode2 = "1000"
+# config_2 = [tmp_mode2, acc_mode2, thermopile_mode2, capacitor_mode2, magnetometer_mode2, mode_duration_2]
+
+# # CONFIGURATION 3:
+# mode_duration_3 = 10 # seconds
+# tmp_mode_3 = "CC_32_16"
+# acc_mode_3 = "accelerometer_only_0_90"
+# thermopile_mode_3 = "TP_off"
+# capacitor_mode_3 = "on"
+# magnetometer_mode_3 = "1000"
+# config_3 = [tmp_mode_3, acc_mode_3, thermopile_mode_3, capacitor_mode_3, magnetometer_mode_3, mode_duration_3]
+
+# # ADD CONFIGURATION ARRAYS HERE  
+# configurations = [config_1, config_2, config_3]
+
+# validateInputs(configurations)

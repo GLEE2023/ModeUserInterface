@@ -1,6 +1,3 @@
-import numpy as np
-import itertools 
-
 def generateBitsTMP117(mode): # TMP - 6 bits to encode 48 different configurations
     possTimes = {'0.0155': "000", '0.125': "001", '0.25': "010", '0.5': "011", '1': "100", '4': "101", '8': "110", '16': "111"}
     possAveraging = {'0': "00", '8': "01", '32': "10", '64': "11"}
@@ -72,9 +69,25 @@ def generateAllBitstrings(allConfigs): # takes in a 2d array
         
     return allConfigsFullBitstrings
 
+def ArduinoConfig(allConfigs, team_name):
+    file_name = team_name + '.txt'
+    f = open(file_name, 'w+')  # create file if doesn't exists otherwise open in overwrite mode
+    allBitstrings = generateAllBitstrings(allConfigs)
+    for index, config in enumerate(allBitstrings):
+        bitstring = config[0]
+        duration = config[1]
+        f.write("#DEFINE MODE_" + str(index) + " " + str(bitstring) + "\n")
+        f.write("#DEFINE DURATION_" + str(index) + " " + str(duration)+ "\n\n")
+    f.close()
+
+def readArduinoConfigs(team_name):
+    file_name = team_name + '.txt'
+    f = open(file_name, 'r') 
+    print(f.read())
+
 # # CONFIGURATION 1:
 # mode1_duration = 10 # seconds
-# tmp_mode1 = "CC_32_16"
+# tmp_mode1 = "C_32_16"
 # acc_mode1 = "low_power_wakeup_1.25_1_255"
 # thermopile_mode1 = "TP_only"
 # capacitor_mode1 = "off"
@@ -91,3 +104,4 @@ def generateAllBitstrings(allConfigs): # takes in a 2d array
 # config2 = [tmp_mode2, acc_mode2, thermopile_mode2, capacitor_mode2, magnetometer_mode2, mode2_duration]
 
 # res = generateAllBitstrings([config1, config2, config1])
+# print(res)

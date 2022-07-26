@@ -190,20 +190,21 @@ class TMP117():
         line = np.full_like(time_vector, 1)
         
         ax1 = f.add_subplot(312, sharex=ax3)
-        power_plot, = plt.plot(time_vector, power_vector)
+        plt.plot(time_vector, power_vector)
         plt.tick_params('x', labelbottom=False)
         #power_value_limit = [0,0.1]
         #ax1.set_ylim(power_value_limit)
-        ax1.set_ylabel('Average Power (mW)')
+        ax1.set_ylabel('Average Power (mW)', fontsize=15)
 
         ax2 = f.add_subplot(313, sharex=ax3)
-        data_plot, = plt.plot(time_vector, data_vector)
+        plt.plot(time_vector, data_vector)
         # make these tick labels invisible
         plt.tick_params('x', labelsize=12)
         #data_value_limit = [0,500]
         #ax2.set_ylim(data_value_limit)
-        ax2.set_ylabel('Average Data (Bytes)')
-        ax2.set_xlabel('Seconds')
+        ax3.set_ylabel('Active Modes', fontsize=15)
+        ax2.set_ylabel('Average Data (Bytes)', fontsize=15)
+        ax2.set_xlabel('Time (s)', fontsize = 20)
 
         plt.show()
     
