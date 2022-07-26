@@ -35,7 +35,7 @@ class Sensor:
         #basic function to plot power and data vs time. 
         f = plt.figure(figsize=(10,10))
         ax3 = f.add_subplot(311)
-        plt.tick_params('x', labelbottom=False)
+        #plt.tick_params('x', labelbottom=False) 
         ticks = {}
         colors = []
         for i in range(len(active_times)):
@@ -44,10 +44,10 @@ class Sensor:
         for i,v in enumerate(active_times):
             if v[2] not in ticks.keys():
                 ticks[v[2]] = i
-            plt.plot([v[0],v[1]],[ticks[v[2]],ticks[v[2]]],color=colors[ticks[v[2]]])
+            #Plotting mode active times. We move each end a bit inwards because line width is bugged.
+            plt.plot([v[0] + time_vector[-1]*0.005,v[1]-time_vector[-1]*0.005], [ticks[v[2]],ticks[v[2]]], color=colors[ticks[v[2]]], linewidth=5)
         plt.yticks(list(ticks.values()),list(ticks.keys()))
         
-        line = np.full_like(time_vector, 1)
         
         ax1 = f.add_subplot(312, sharex=ax3)
         plt.grid(visible=True)
