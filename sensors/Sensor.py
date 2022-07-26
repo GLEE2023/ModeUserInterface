@@ -13,23 +13,6 @@ class Sensor:
         #accelerometer(mode="accelerometer_only", sample_rate_divisor=142, etc=etc)
 
     
-    # def getActiveTimes(self, active_times: List[tuple]) -> List:
-    #     #active times is a list of tuples. First two elements are start and end times, third is 
-    #     length = len(self.time)
-    #     arr = [0] * length # creating corresponding power array to time intervals, default values 
-
-    #     # check if the given start and end time is a valid value in the time array and round to nearest value 
-    #     for times in active_times:
-    #         start_index = int(times[0] / self.time_step) # getting index of the closest value to active times 
-    #         end_index = int(times[1] / self.time_step)
-            
-    #         if start_index < 0 or end_index > len(self.time): 
-    #             print("Error. Index not valid.")
-    #             return -1
-            
-    #         for i in range(start_index, end_index+1):
-    #             arr[i] = times[2]
-    #     return arr
     
     def plotData(self, power_vector, data_vector, time_vector, active_times):
         #basic function to plot power and data vs time. 
@@ -55,16 +38,16 @@ class Sensor:
         plt.tick_params('x', labelbottom=False)
         #power_value_limit = [0,0.1]
         #ax1.set_ylim(power_value_limit)
-        ax1.set_ylabel('Power (mW)')
+        ax1.set_ylabel('Average Power (mW)', fontsize=15)
 
         ax2 = f.add_subplot(313, sharex=ax3)
-        plt.tick_params('x', labelsize=12)
-        data_plot, = plt.plot(time_vector, data_vector)
+        plt.plot(time_vector, data_vector)
         # make these tick labels invisible
         plt.tick_params('x', labelsize=12)
         #data_value_limit = [0,500]
         #ax2.set_ylim(data_value_limit)
-        ax2.set_ylabel('Data (Bytes)')
-        ax2.set_xlabel('Seconds')
+        ax3.set_ylabel('Active Modes', fontsize=15)
+        ax2.set_ylabel('Average Data (Bytes)', fontsize=15)
+        ax2.set_xlabel('Time (s)', fontsize = 20)
 
         plt.show()
