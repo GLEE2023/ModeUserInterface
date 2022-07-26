@@ -2,21 +2,22 @@
 TMP(7 bits), MPU(15 bits), Therm(1 bit), Cap(1 bit), Mag(2 bit)
 
 From LSB to MSB:
--TMP117 (0-6)
-0-1 = mode, 0b10 for one shot, 0b11 for continuous conversion
-2-4 = conversion bits, see convTimes table.
-5-6 = averaging bits, see convTimes table.
+-Mag (0-2)
+0 = on or off bit
+1-2 = mode, represents frequency
 
--MPU6000 (7-21)
-7-9 = digital low pass setting, may or may not be removed.
-10-17 = sample rate divisor, number between 0-255
-18-21 = mode, options are in generateBitstrings file.
+-Cap (3)
+3 = on or off
 
--Therm (22)
-22 = on or off
+-Therm (4)
+4 = on or off
 
--Cap (23)
-23 = on or off
+-MPU6050 (5-19)
+5-8 = mode, options are in generateBitstrings file.
+9-16 = sample rate divisor, 8 bit number
+17-19 = digital low pass setting.
 
--Mag (24-25)
-24-25 = mode, represents frequency, one more bit needed.
+-TMP117 (20-26)
+20-21 = averaging
+22-24 = conversion, see convTimes table
+25-26 = mode, 0b10 for one shot, 0b11 for continuous conversion 
