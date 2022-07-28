@@ -59,27 +59,36 @@ class TMP117():
                 * num_averages and convCycleTime are taken as strings but will be converted to int/float during conversion
 
             Returns: power (float)
-        """
-
+        """        
+        SDcurrent = 250/1000000 # micro amps
         activeCurrentConsumption = 135 # micro amps
+        standByCurrentConsumption = 1.25 # micro amps
+
+        current = 0
+        standbyTime = 0
         activeConversionTime = num_averages*0.0155
 
-        standByCurrentConsumption = 1.25 # micro amps
-        standbyTime = convCycleTime - activeConversionTime
+        # CHECK CONDITIONS
+        if num_averages == 0:
+            activeConversionTime = 0.0155 # no averaging means tmp sensor just takes one measurement
         
-        SDcurrent = 250/ 1000000 # micro amps
-        current = 0
+        if activeConversionTime > convCycleTime: # active conversion time is greater than total cycle time then no standby time
+            standbyTime = 0 
+        else: standbyTime = convCycleTime - activeConversionTime
+
+        # COMPUTE POWER FOR MODE
         if mode == "CC":
-            current = ((activeCurrentConsumption*activeConversionTime)+(standByCurrentConsumption*standbyTime))/convCycleTime
+            current = ((activeCurrentConsumption*activeConversionTime)+(standByCurrentConsumption*standbyTime))/convCycleTime # average power for CC
 
         elif mode == "OS":
-            current = ((activeCurrentConsumption*activeConversionTime)+(SDcurrent*standbyTime))/convCycleTime
+            current = (activeCurrentConsumption*activeConversionTime)/convCycleTime # active conversion cycle time is the total conv cycle time
         
         elif mode == "OFF":
-            current = 0
+            current = 0 # TMP is off
 
         power = (current * 3.3)/1000 # milli watts
-        
+        #print(power)
+
         return power
     
     def getAllModesPower(self):
@@ -100,15 +109,16 @@ class TMP117():
 
             if start_index < 0 or end_index > len(self.time): # not valid time
                 print("Error. Index not valid.")
-                return -1
+                return
             params = times[2]
             x = params.split("_")
             mode = x[0]
             averages = x[1]
             convCycleTime = float(x[2])
-            if self.loop_rate > convCycleTime:
-                convCycleTime = self.loop_rate
-            
+            if convCycleTime > 0:   
+                if self.loop_rate > 1/convCycleTime:
+                    convCycleTime = 1/self.loop_rate
+                
             power = self.computePower(int(averages), float(convCycleTime), mode)
             for i in range(start_index, end_index):
                 power_arr[i] = power
@@ -139,23 +149,24 @@ class TMP117():
             params = times[2]
             x = params.split("_")
             convCycleTime = float(x[2])
-            if self.loop_rate > convCycleTime:
-                convCycleTime = self.loop_rate
-            
-            #calculating data per step in active time period
-            # convCycle = self.activeTimeParams[times][1]
-            bits_per_second = bits_per_cycle /convCycleTime # bits per second
-            activeTimeTotal = times[1]-times[0] # getting num of seconds of active period
-            bits_total = bits_per_second * activeTimeTotal # total bits during that active period
-            num_steps = end_index-start_index 
-            bits_per_step = bits_total / num_steps
-            
+            if convCycleTime > 0:
+                if self.loop_rate < 1/convCycleTime: 
+                    convCycleTime = 1/self.loop_rate
+                    
+                #calculating data per step in active time period
+                if convCycleTime == 0:
+                    bits_per_second = 0
+                else: bits_per_second = bits_per_cycle / convCycleTime # bits per second
+                activeTimeTotal = times[1]-times[0] # getting num of seconds of active period
+                bits_total = bits_per_second * activeTimeTotal # total bits during that active period
+                num_steps = end_index-start_index 
+                bits_per_step = bits_total / num_steps 
+                
             for i in range(start_index, length):
                 if i < end_index:
                     data_accumulated += bits_per_step
-                    
                 data_arr[i] = data_accumulated 
-            
+                
         return data_arr
     
     def plotData(self, power_vector, data_vector, time_vector, active_times):
