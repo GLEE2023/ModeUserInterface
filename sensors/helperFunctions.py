@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import difflib
 
-def generateActiveList(total_time: float, modelist:list) -> list:
+def generateActiveList(total_time: float, modelist: list) -> list:
     """
         Returns list similar to the form of active_times, but based off of modedict.
         active_times: [(int(start1), int(end1), "mode1"), (int(start2), int(end2), "mode2")]
@@ -29,6 +29,8 @@ def generateActiveList(total_time: float, modelist:list) -> list:
     #for accelerometer:
     #modedict = {"gyroscope_accelerometer_DMP":15, "accelerometer_only":15,"low_power_wakeup_5":40}
     #total period is 70 seconds (15+15+40)
+
+    modelist = np.array(modelist)
     keys = modelist[:,0]
     finalArr = []
     curTime = 0
